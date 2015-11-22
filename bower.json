@@ -1,0 +1,28 @@
+{
+  "name": "NuiPogodka",
+  "version": "0.0.0",
+  "authors": [
+    "MacheteDSMS <asurinov8@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "angular": "~1.4.7",
+    "angular-audio": "~1.7.1"
+  },
+  "overrides": {
+    "bootstrap": {
+      "main": [
+        "./dist/css/bootstrap.min.css",
+        "./dist/js/bootstrap.min.js"
+      ]
+    }
+  }
+}

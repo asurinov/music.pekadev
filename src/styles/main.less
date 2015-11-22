@@ -1,0 +1,55 @@
+@main-color: #286090;
+
+body {
+  padding: 80px 50px 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+
+  .row {
+    margin-bottom: 15px;
+  }
+}
+
+.pekadev-audio-grid {
+  max-height: 600px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+
+  tr {
+    th {
+      text-align: center;
+
+      .glyphicon {
+        font-size: 16px;
+        color: @main-color;
+      }
+    }
+  }
+}
+
+a {
+  color: #00B7FF;
+}
+
+table {
+  position: relative;
+
+  th {
+    position: relative;
+  }
+}
+
+.draggable-edge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  width: 10px;
+  height: 100%;
+  border: 1px solid springgreen;
+  content: '';
+
+  &:hover {
+    cursor: e-resize;
+    color: red;
+  }
+}
