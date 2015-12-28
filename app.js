@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+app.use('/*', routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -30,11 +30,8 @@ app.use(function(req, res, next) {
     next(err);
 });
 
-app.all('/*', function (request, response, next) {
-    response.header("Access-Control-Allow-Origin", "*");
-    response.header("Access-Control-Allow-Headers", "X-Requested-With");
-    response.header("Access-Control-Allow-Methods", "GET, POST", "PUT", "DELETE");
-    next();
+app.all("/*", function(req, res, next) {
+    res.sendfile("index.html", { root: __dirname + "/app" });
 });
 
 

@@ -7,9 +7,11 @@ var angularSort = require('gulp-angular-filesort');
 var series = require('stream-series');
 var bowerSrc = require('main-bower-files');
 var runSequence = require('run-sequence');
+var templateCache = require('gulp-angular-templatecache');
 
 var config = {
     viewsSourcePath: './src/views/**/*.ejs',
+    templatesSourcePath: './src/views/**/*.html',
     viewsDestinationPath: './views',
     indexView: 'index.ejs',
     appScriptsSourcePath: './src/scripts/**/*.js',
@@ -61,12 +63,18 @@ gulp.task('Clean', function () {
 });
 
 gulp.task('CopyViews', function () {
-    return gulp.src([config.viewsSourcePath])
+    return gulp.src([config.viewsSourcePath, config.templatesSourcePath])
         .pipe(gulp.dest(config.viewsDestinationPath));
 });
 
+gulp.task('CacheTemplates', function () {
+    return gulp.src(config.templatesSourcePath)
+        .pipe(templateCache({module: 'app', root: '/'}))
+        .pipe(gulp.dest('./src/scripts/'));
+});
+
 gulp.task('buildAppResources', function(){
-    runSequence('Clean', ['CopyViews', 'BuildFonts'], 'BuildStyles', 'BuildScripts');
+    runSequence('Clean', ['CopyViews', 'CacheTemplates', 'BuildFonts'], 'BuildStyles', 'BuildScripts');
 });
 
 gulp.task('watch', function() {

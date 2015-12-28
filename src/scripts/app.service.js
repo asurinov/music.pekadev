@@ -4,9 +4,9 @@
 (function(){
     angular.module('app').service('appService', appService);
 
-    appService['$inject'] = ['$http', 'urlService'];
+    appService['$inject'] = ['$http', 'urlService', 'appStorage'];
 
-    function appService($http, urlService) {
+    function appService($http, urlService, storage) {
         var vm = this;
 
         var clientId = 5130198;
@@ -19,9 +19,12 @@
         vm.getFriendsList = getFriendsList;
         vm.setAccessParams = setAccessParams;
         vm.getAccessToken = getAccessToken;
+        vm.getUserId = getUserId;
         vm.getAudioList = getAudioList;
         vm.searchAudio = searchAudio;
         vm.getUserInfo = getUserInfo;
+        vm.getPopularList = getPopularList;
+        vm.getAlbums = getAlbums;
 
         function setAccessParams(token, userId){
             vm.token = token;
@@ -32,11 +35,15 @@
             return vm.token;
         }
 
+        function getUserId(){
+            return vm.userId;
+        }
+
         function auth(){
             var params = {
                 client_id: clientId,
                 display: 'page',
-                redirect_uri: 'http://music.pekadev.ru',
+                redirect_uri: urlService.getHost(),
                 scope: 'friends,audio',
                 response_type: 'token',
                 v: apiVersion
@@ -47,7 +54,7 @@
 
         function getUserInfo(userId){
             var params = {
-                user_ids: userId || vm.userId,
+                user_ids: userId || getUserId(),
                 fields: 'first_name,last_name,photo_50',
                 v: apiVersion
             };
@@ -62,9 +69,9 @@
                 });
         }
 
-        function getFriendsList(){
+        function getFriendsList(userId){
             var params = {
-                user_id: vm.userId,
+                user_id: userId || getUserId(),
                 fields: 'first_name,last_name',
                 v: apiVersion
             };
@@ -100,12 +107,44 @@
 
         function getAudioList(){
             var params = {
-                owner_id: vm.userId,
+                owner_id: getUserId(),
                 access_token: vm.token,
                 v: apiVersion
             };
 
             return $http.jsonp(urlService.getMethodUrl('audio.get', params) + '&callback=JSON_CALLBACK')
+                .then(function(result) {
+                    return result.data.response.items;
+                })
+                .catch(function(data) {
+                    console.log(data);
+                    return [];
+                });
+        }
+
+        function getPopularList(){
+            var params = {
+                access_token: vm.token,
+                v: apiVersion
+            };
+
+            return $http.jsonp(urlService.getMethodUrl('audio.getPopular', params) + '&callback=JSON_CALLBACK')
+                .then(function(result) {
+                    return result.data.response;
+                })
+                .catch(function(data) {
+                    console.log(data);
+                    return [];
+                });
+        }
+
+        function getAlbums(){
+            var params = {
+                access_token: vm.token,
+                v: apiVersion
+            };
+
+            return $http.jsonp(urlService.getMethodUrl('audio.getAlbums', params) + '&callback=JSON_CALLBACK')
                 .then(function(result) {
                     return result.data.response.items;
                 })

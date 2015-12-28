@@ -4,13 +4,16 @@
 (function(){
     angular.module('app').service('urlService', urlService);
 
-    function urlService() {
+    urlService['$inject'] = ['$location']
+
+    function urlService($location) {
         var vm = this;
 
         vm.baseApiUrl = 'https://api.vk.com/method/';
 
         vm.getAuthUrl = getAuthUrl;
         vm.getMethodUrl = getMethodUrl;
+        vm.getHost = getHost;
 
         function formatQueryParams(params){
             if(params){
@@ -29,6 +32,13 @@
 
         function getMethodUrl(method, params){
            return vm.baseApiUrl + method + formatQueryParams(params);
+        }
+
+        function getHost(){
+            var isLocalhost = $location.host() === 'localhost';
+            return isLocalhost
+                ? $location.protocol() + '://'+ $location.host() +':'+  $location.port()
+                : $location.protocol() + '://'+ $location.host();
         }
     }
 })();
