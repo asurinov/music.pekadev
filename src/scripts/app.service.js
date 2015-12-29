@@ -4,9 +4,9 @@
 (function(){
     angular.module('app').service('appService', appService);
 
-    appService['$inject'] = ['$http', 'urlService', 'appStorage'];
+    appService['$inject'] = ['$http', 'urlService'];
 
-    function appService($http, urlService, storage) {
+    function appService($http, urlService) {
         var vm = this;
 
         var clientId = 5130198;
@@ -86,18 +86,20 @@
                 });
         }
 
-        function searchAudio(pattern){
+        function searchAudio(pattern, paging){
             var params = {
                 q: pattern,
                 auto_complete: 1,
                 sort: 2,
+                offset: (paging.currentPage - 1) * paging.itemsPerPage,
+                count: paging.itemsPerPage,
                 access_token: vm.token,
                 v: apiVersion
             };
 
             return $http.jsonp(urlService.getMethodUrl('audio.search', params) + '&callback=JSON_CALLBACK')
                 .then(function(result) {
-                    return result.data.response.items;
+                    return result.data.response;
                 })
                 .catch(function(data) {
                     console.log(data);
@@ -105,16 +107,18 @@
                 });
         }
 
-        function getAudioList(){
+        function getAudioList(paging){
             var params = {
                 owner_id: getUserId(),
                 access_token: vm.token,
+                offset: (paging.currentPage - 1) * paging.itemsPerPage,
+                count: paging.itemsPerPage,
                 v: apiVersion
             };
 
             return $http.jsonp(urlService.getMethodUrl('audio.get', params) + '&callback=JSON_CALLBACK')
                 .then(function(result) {
-                    return result.data.response.items;
+                    return result.data.response;
                 })
                 .catch(function(data) {
                     console.log(data);

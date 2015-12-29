@@ -6,11 +6,18 @@
         .module('app')
         .controller('tracksController', tracksController);
 
-    tracksController['$inject'] = ['$scope', 'appService', 'ngAudio'];
+    tracksController['$inject'] = ['$scope', 'appService', 'ngAudio', 'stringService'];
 
-    function tracksController($scope, appService, ngAudio){
+    function tracksController($scope, appService, ngAudio, stringService){
         var vm = this;
         vm.currentRecord = {};
+
+        vm.paging = null;
+        vm.dataType = null;
+
+        resetPaging();
+
+        vm.loadGrid = loadGrid;
 
         $scope.audioPlayer = null;
 
@@ -25,6 +32,22 @@
                 $scope.audioPlayer.stop();
             }
         });
+
+        function loadGrid(){
+            switch(vm.dataType){
+                case 'popular':
+                    getPopularList();
+                    break;
+                case 'search':
+                    audioSearch();
+                    break;
+                case 'mytracks':
+                    getAudioList();
+                    break;
+                default:
+                    break;
+            }
+        }
 
         function togglePlayback(record){
             if(record.playing){
@@ -41,7 +64,7 @@
                 if(!$scope.audioPlayer || $scope.audioPlayer.id !== record.url) {
                     $scope.audioPlayer = ngAudio.load(record.url);
                 }
-                $scope.audioPlayer.setVolume(0.4);
+                $scope.audioPlayer.setVolume(0.2);
                 $scope.audioPlayer.play();
                 record.playing = true;
             }
@@ -54,21 +77,44 @@
         }
 
         function audioSearch(){
-            appService.searchAudio(vm.pattern).then(function(res){
-                prepareRecords(res);
-                $scope.audios = res;
+            if(vm.dataType !== 'search'){
+                vm.dataType = 'search';
+                resetPaging();
+            }
+
+            appService.searchAudio(vm.pattern, vm.paging).then(function(res){
+                recalculatePaging(vm.paging, res.count);
+                vm.paging.totalItems = res.count;
+                prepareRecords(res.items);
+                $scope.audios = res.items;
             });
         }
 
         function getAudioList(){
-            appService.getAudioList().then(function(res){
-                prepareRecords(res);
-                $scope.audios = res;
+            if(vm.dataType !== 'mytracks'){
+                vm.dataType = 'mytracks';
+                resetPaging();
+            }
+
+            appService.getAudioList(vm.paging).then(function(res){
+                recalculatePaging(vm.paging, res.count);
+                prepareRecords(res.items);
+                $scope.audios = res.items;
             });
         }
 
         function getPopularList(){
+            if(vm.dataType !== 'popular'){
+                vm.dataType = 'popular';
+                resetPaging();
+            }
+
             appService.getPopularList().then(function(res){
+                vm.paging.totalItems = res.length;
+                vm.paging.itemsPerPage = res.length;
+                vm.paging.totalPages = 1;
+                vm.paging.totalPagesCaption = stringService.getWordEnding(vm.paging.totalPages, 'pages');
+                vm.paging.totalItemsCaption = stringService.getWordEnding(vm.paging.totalItems, 'records');
                 prepareRecords(res);
                 $scope.audios = res;
             });
@@ -78,6 +124,23 @@
             for(var i = 0; i < records.length; i++){
                 records[i].duration = moment.duration(records[i].duration, 'seconds').format('mm:ss', { trim: false });
             }
+        }
+
+        function recalculatePaging(paging, count){
+            paging.totalItems = count;
+            paging.totalPages = Math.ceil(count / paging.itemsPerPage);
+            paging.totalPagesCaption = stringService.getWordEnding(paging.totalPages, 'pages');
+            paging.totalItemsCaption = stringService.getWordEnding(paging.totalItems, 'records');
+        }
+
+        function resetPaging(){
+            vm.paging = {
+                totalItems: 0,
+                totalPages: 0,
+                currentPage: 1,
+                maxSize: 10,
+                itemsPerPage: 30
+            };
         }
     }
 })(angular, moment);
