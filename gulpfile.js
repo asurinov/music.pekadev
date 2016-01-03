@@ -12,6 +12,7 @@ var templateCache = require('gulp-angular-templatecache');
 var config = {
     viewsSourcePath: './src/views/**/*.ejs',
     templatesSourcePath: './src/views/**/*.html',
+    mediaSourcePath: './src/media/**/*.*',
     viewsDestinationPath: './views',
     indexView: 'index.ejs',
     appScriptsSourcePath: './src/scripts/**/*.js',
@@ -19,7 +20,8 @@ var config = {
     distPath: './public',
     scriptsDestinationSubPath: '/scripts',
     styleDestinationSubPath: '/styles',
-    fontsDestinationSubPath: '/fonts'
+    fontsDestinationSubPath: '/fonts',
+    mediaDestinationSubPath: '/media'
 };
 
 gulp.task('BuildFonts', function () {
@@ -67,6 +69,11 @@ gulp.task('CopyViews', function () {
         .pipe(gulp.dest(config.viewsDestinationPath));
 });
 
+gulp.task('CopyMedia', function () {
+    return gulp.src([config.mediaSourcePath])
+        .pipe(gulp.dest(config.distPath + config.mediaDestinationSubPath));
+});
+
 gulp.task('CacheTemplates', function () {
     return gulp.src(config.templatesSourcePath)
         .pipe(templateCache({module: 'app', root: '/'}))
@@ -74,7 +81,7 @@ gulp.task('CacheTemplates', function () {
 });
 
 gulp.task('buildAppResources', function(){
-    runSequence('Clean', ['CopyViews', 'CacheTemplates', 'BuildFonts'], 'BuildStyles', 'BuildScripts');
+    runSequence('Clean', ['CopyViews', 'CopyMedia', 'CacheTemplates', 'BuildFonts'], 'BuildStyles', 'BuildScripts');
 });
 
 gulp.task('watch', function() {
