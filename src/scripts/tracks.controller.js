@@ -6,16 +6,25 @@
         .module('app')
         .controller('tracksController', tracksController);
 
-    tracksController['$inject'] = ['$scope', 'appService', 'ngAudio', 'stringService'];
+    tracksController['$inject'] = ['$scope', 'appService',
+        'ngAudio', 'stringService'];
 
-    function tracksController($scope, appService, ngAudio, stringService){
+    function tracksController($scope, appService,
+        ngAudio, stringService){
+
         var vm = this;
-        vm.currentRecord = {};
 
+        var volume = 0.2;
+
+        vm.currentRecord = {};
         vm.paging = null;
         vm.dataType = null;
 
-        resetPaging();
+        init();
+
+        function init(){
+            resetPaging();
+        }
 
         vm.loadGrid = loadGrid;
 
@@ -58,14 +67,17 @@
                     vm.currentRecord.playing = false;
                     vm.currentRecord = record;
                     if($scope.audioPlayer){
+                        volume = $scope.audioPlayer.volume;
                         $scope.audioPlayer.pause();
                     }
                 }
                 if(!$scope.audioPlayer || $scope.audioPlayer.id !== record.url) {
-                    $scope.audioPlayer = ngAudio.load(record.url);
+                    $scope.audioPlayer = ngAudio.play(record.url);
+                    $scope.audioPlayer.setVolume(volume);
+                } else {
+                    $scope.audioPlayer.play();
                 }
-                $scope.audioPlayer.setVolume(0.2);
-                $scope.audioPlayer.play();
+
                 record.playing = true;
             }
         }
@@ -85,7 +97,6 @@
             appService.searchAudio(vm.pattern, vm.paging).then(function(res){
                 recalculatePaging(vm.paging, res.count);
                 vm.paging.totalItems = res.count;
-                prepareRecords(res.items);
                 $scope.audios = res.items;
             });
         }
@@ -98,7 +109,6 @@
 
             appService.getAudioList(vm.paging).then(function(res){
                 recalculatePaging(vm.paging, res.count);
-                prepareRecords(res.items);
                 $scope.audios = res.items;
             });
         }
@@ -115,15 +125,8 @@
                 vm.paging.totalPages = 1;
                 vm.paging.totalPagesCaption = stringService.getWordEnding(vm.paging.totalPages, 'pages');
                 vm.paging.totalItemsCaption = stringService.getWordEnding(vm.paging.totalItems, 'records');
-                prepareRecords(res);
                 $scope.audios = res;
             });
-        }
-
-        function prepareRecords(records){
-            for(var i = 0; i < records.length; i++){
-                records[i].duration = moment.duration(records[i].duration, 'seconds').format('mm:ss', { trim: false });
-            }
         }
 
         function recalculatePaging(paging, count){
