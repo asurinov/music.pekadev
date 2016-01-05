@@ -10,11 +10,11 @@ var runSequence = require('run-sequence');
 var templateCache = require('gulp-angular-templatecache');
 
 var config = {
-    viewsSourcePath: './src/views/**/*.ejs',
+    viewsSourcePath: './src/views/**/*.html',
     templatesSourcePath: './src/views/**/*.html',
     mediaSourcePath: './src/media/**/*.*',
     viewsDestinationPath: './views',
-    indexView: 'index.ejs',
+    indexView: 'index.html',
     appScriptsSourcePath: './src/scripts/**/*.js',
     appStyleSourcePath: './src/styles/**/*.less',
     distPath: './public',

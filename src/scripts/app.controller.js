@@ -57,10 +57,10 @@
 
         function checkAuth() {
             if (!isAuthorized()) {
-                var path = $location.path().substr(1);
+                var path = $location.path();
                 var token;
                 if (path) {
-                    var params = path.split('&');
+                    var params = path.replace('/', '').split('&');
                     token = getQueryVariable('access_token', params);
                 }
                 if (!token) {
@@ -69,7 +69,6 @@
                     vm.isAuthorized = true;
                     var userId = getQueryVariable('user_id', params);
                     appService.setAccessParams(token, userId);
-                    $location.path('/');
                     getUserInfo();
                 }
             }else {
