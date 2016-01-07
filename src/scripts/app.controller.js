@@ -27,7 +27,7 @@
 
         function getUserInfo(){
             appService.getUserInfo().then(function(res){
-                vm.userInfo = res;
+                vm.userInfo = res[0];
             });
         }
 

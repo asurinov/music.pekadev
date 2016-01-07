@@ -74,17 +74,7 @@
                 v: apiVersion
             };
 
-            var deferred = $q.defer();
-
-            VK.Api.call('users.get', params, function(r) {
-                if(r.response) {
-                    deferred.resolve(r.response[0]);
-                } else {
-                    deferred.reject();
-                }
-            });
-
-            return deferred.promise;
+            return callApi('users.get', params);
         }
 
         function getFriendsList(userId){
@@ -94,17 +84,7 @@
                 v: apiVersion
             };
 
-            var deferred = $q.defer();
-
-            VK.Api.call('friends.get', params, function(r) {
-                if(r.response) {
-                    deferred.resolve(r.response);
-                } else {
-                    deferred.reject();
-                }
-            });
-
-            return deferred.promise;
+            return callApi('friends.get', params);
         }
 
         function searchAudio(pattern, paging){
@@ -118,17 +98,7 @@
                 v: apiVersion
             };
 
-            var deferred = $q.defer();
-
-            VK.Api.call('audio.search', params, function(r) {
-                if(r.response) {
-                    deferred.resolve(r.response);
-                } else {
-                    deferred.reject();
-                }
-            });
-
-            return deferred.promise;
+            return callApi('audio.search', params);
         }
 
         function getAudioList(paging){
@@ -140,17 +110,7 @@
                 v: apiVersion
             };
 
-            var deferred = $q.defer();
-
-            VK.Api.call('audio.get', params, function(r) {
-                if(r.response) {
-                    deferred.resolve(r.response);
-                } else {
-                    deferred.reject();
-                }
-            });
-
-            return deferred.promise;
+            return callApi('audio.get', params);
         }
 
         function getPopularList(){
@@ -159,17 +119,7 @@
                 v: apiVersion
             };
 
-            var deferred = $q.defer();
-
-            VK.Api.call('audio.getPopular', params, function(r) {
-                if(r.response) {
-                    deferred.resolve(r.response);
-                } else {
-                    deferred.reject();
-                }
-            });
-
-            return deferred.promise;
+            return callApi('audio.getPopular', params);
         }
 
         function getAlbums(){
@@ -178,16 +128,19 @@
                 v: apiVersion
             };
 
+            return callApi('audio.getAlbums', params);
+        }
+
+        function callApi(method, params){
             var deferred = $q.defer();
 
-            VK.Api.call('audio.getAlbums', params, function(r) {
+            VK.Api.call(method, params, function(r) {
                 if(r.response) {
                     deferred.resolve(r.response);
                 } else {
                     deferred.reject();
                 }
             });
-
             return deferred.promise;
         }
     }
