@@ -18,7 +18,7 @@
 
         function getAlbums(){
             appService.getAlbums().then(function(res){
-                $scope.albums = res;
+                $scope.albums = res.items;
             });
         }
     }

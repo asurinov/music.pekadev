@@ -9,6 +9,12 @@
             $httpProvider.defaults.useXDomain = true;
             delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
+            VK.init({
+                apiId: 5130198
+            });
+
+            VK.UI.button('vk-auth');
+
             $routeProvider
                 .when('/', {
                     templateUrl: '/partials/tracks.view.html',

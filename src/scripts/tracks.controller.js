@@ -88,8 +88,8 @@
             });
         }
 
-        function audioSearch(){
-            if(vm.dataType !== 'search'){
+        function audioSearch(reset){
+            if(vm.dataType !== 'search' || reset){
                 vm.dataType = 'search';
                 resetPaging();
             }

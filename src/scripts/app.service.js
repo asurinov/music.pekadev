@@ -4,9 +4,9 @@
 (function(){
     angular.module('app').service('appService', appService);
 
-    appService['$inject'] = ['$http', 'urlService'];
+    appService['$inject'] = ['$http', '$q', 'urlService'];
 
-    function appService($http, urlService) {
+    function appService($http, $q, urlService) {
         var vm = this;
 
         var clientId = 5130198;
@@ -42,14 +42,29 @@
         function auth(){
             var params = {
                 client_id: clientId,
-                display: 'page',
+                display: 'popup',
                 redirect_uri: urlService.getHost(),
                 scope: 'friends,audio',
                 response_type: 'token',
                 v: apiVersion
             };
 
-            return urlService.getAuthUrl(params);
+            var deferred = $q.defer();
+
+            VK.Auth.login(function(response) {
+                if (response.session) {
+                    /* Пользователь успешно авторизовался */
+                    deferred.resolve();
+                    if (response.settings) {
+                        /* Выбранные настройки доступа пользователя, если они были запрошены */
+                    }
+                } else {
+                    /* Пользователь нажал кнопку Отмена в окне авторизации */
+                    deferred.reject();
+                }
+            });
+
+            return deferred.promise;
         }
 
         function getUserInfo(userId){
@@ -59,14 +74,17 @@
                 v: apiVersion
             };
 
-            return $http.jsonp(urlService.getMethodUrl('users.get', params) + '&callback=JSON_CALLBACK')
-                .then(function(result) {
-                    return result.data.response[0];
-                })
-                .catch(function(data) {
-                    console.log(data);
-                    return [];
-                });
+            var deferred = $q.defer();
+
+            VK.Api.call('users.get', params, function(r) {
+                if(r.response) {
+                    deferred.resolve(r.response[0]);
+                } else {
+                    deferred.reject();
+                }
+            });
+
+            return deferred.promise;
         }
 
         function getFriendsList(userId){
@@ -76,14 +94,17 @@
                 v: apiVersion
             };
 
-            return $http.jsonp(urlService.getMethodUrl('friends.get', params) + '&callback=JSON_CALLBACK')
-                .then(function(result) {
-                    return result.data.response.items;
-                })
-                .catch(function(data) {
-                    console.log(data);
-                    return [];
-                });
+            var deferred = $q.defer();
+
+            VK.Api.call('friends.get', params, function(r) {
+                if(r.response) {
+                    deferred.resolve(r.response);
+                } else {
+                    deferred.reject();
+                }
+            });
+
+            return deferred.promise;
         }
 
         function searchAudio(pattern, paging){
@@ -97,14 +118,17 @@
                 v: apiVersion
             };
 
-            return $http.jsonp(urlService.getMethodUrl('audio.search', params) + '&callback=JSON_CALLBACK')
-                .then(function(result) {
-                    return result.data.response;
-                })
-                .catch(function(data) {
-                    console.log(data);
-                    return [];
-                });
+            var deferred = $q.defer();
+
+            VK.Api.call('audio.search', params, function(r) {
+                if(r.response) {
+                    deferred.resolve(r.response);
+                } else {
+                    deferred.reject();
+                }
+            });
+
+            return deferred.promise;
         }
 
         function getAudioList(paging){
@@ -116,14 +140,17 @@
                 v: apiVersion
             };
 
-            return $http.jsonp(urlService.getMethodUrl('audio.get', params) + '&callback=JSON_CALLBACK')
-                .then(function(result) {
-                    return result.data.response;
-                })
-                .catch(function(data) {
-                    console.log(data);
-                    return [];
-                });
+            var deferred = $q.defer();
+
+            VK.Api.call('audio.get', params, function(r) {
+                if(r.response) {
+                    deferred.resolve(r.response);
+                } else {
+                    deferred.reject();
+                }
+            });
+
+            return deferred.promise;
         }
 
         function getPopularList(){
@@ -132,14 +159,17 @@
                 v: apiVersion
             };
 
-            return $http.jsonp(urlService.getMethodUrl('audio.getPopular', params) + '&callback=JSON_CALLBACK')
-                .then(function(result) {
-                    return result.data.response;
-                })
-                .catch(function(data) {
-                    console.log(data);
-                    return [];
-                });
+            var deferred = $q.defer();
+
+            VK.Api.call('audio.getPopular', params, function(r) {
+                if(r.response) {
+                    deferred.resolve(r.response);
+                } else {
+                    deferred.reject();
+                }
+            });
+
+            return deferred.promise;
         }
 
         function getAlbums(){
@@ -148,14 +178,17 @@
                 v: apiVersion
             };
 
-            return $http.jsonp(urlService.getMethodUrl('audio.getAlbums', params) + '&callback=JSON_CALLBACK')
-                .then(function(result) {
-                    return result.data.response.items;
-                })
-                .catch(function(data) {
-                    console.log(data);
-                    return [];
-                });
+            var deferred = $q.defer();
+
+            VK.Api.call('audio.getAlbums', params, function(r) {
+                if(r.response) {
+                    deferred.resolve(r.response);
+                } else {
+                    deferred.reject();
+                }
+            });
+
+            return deferred.promise;
         }
     }
 })();

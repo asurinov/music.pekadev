@@ -12,69 +12,33 @@
         var vm = this;
 
         vm.isAuthorized = false;
+        vm.userInfo = {};
 
-        checkAuth();
+        init();
 
-        $scope.login = login;
+        vm.login = login;
 
-        function getUserInfo(){
-            appService.getUserInfo().then(function(res){
-                $scope.userInfo = res;
+        function login(){
+            appService.auth().then(function(){
+                vm.isAuthorized = true;
+                getUserInfo();
             });
         }
 
-        function isAuthorized(){
-            var token = appService.getAccessToken();
-            return vm.isAuthorized = token !== null;
+        function getUserInfo(){
+            appService.getUserInfo().then(function(res){
+                vm.userInfo = res;
+            });
         }
 
-        function login(){
-            if (!isAuthorized()) {
-                var path = $location.path().substr(1);
-                if (path) {
-                    var params = path.split('&');
-                    token = getQueryVariable('access_token', params);
-                }
-                if (!token) {
-                    window.location.href = appService.auth();
-                } else {
-                    var userId = getQueryVariable('user_id', params);
-                    appService.setAccessParams(token, userId);
-                    $location.path('/');
-                    getUserInfo()
-                }
-            }
-        }
-
-        function getQueryVariable(variable, paramArr)
-        {
-            for (var i=0; i < paramArr.length ; i++) {
-                var pair = paramArr[i].split("=");
-                if(pair[0] == variable){return pair[1];}
-            }
-            return(null);
-        }
-
-        function checkAuth() {
-            if (!isAuthorized()) {
-                var path = $location.path();
-                var token;
-                if (path) {
-                    var params = path.replace('/', '').split('&');
-                    token = getQueryVariable('access_token', params);
-                }
-                if (!token) {
-                    window.location.href = appService.auth();
-                } else {
+        function init() {
+            VK.Auth.getLoginStatus(function(res){
+                if (res.session) {
                     vm.isAuthorized = true;
-                    var userId = getQueryVariable('user_id', params);
-                    appService.setAccessParams(token, userId);
+                    appService.setAccessParams('', res.session.mid);
                     getUserInfo();
                 }
-            }else {
-                vm.isAuthorized = true;
-                getUserInfo();
-            }
+            });
         }
     }
 })(angular, moment);
