@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <base href="/">
+    <meta charset="utf-8">
+    <title>VkMusicPekadev</title>
+    <script src="//vk.com/js/api/openapi.js" type="text/javascript"></script>
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- inject:js -->
+    <!-- endinject -->
+</head>
+<body ng-controller="appController as apc">
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">VkMusicPekadev</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="/playlists">Playlists</a></li>
+        </ul>
+        <span id="vk-auth" ng-hide="apc.isAuthorized" ng-click="apc.login()"></span>
+        <form class="navbar-form navbar-right" ng-if="apc.isAuthorized">
+            <img class="img-circle" ng-src="{{apc.userInfo.photo_50}}" alt="">
+            <span ng-bind="apc.userInfo.last_name"></span>
+            <span ng-bind="apc.userInfo.first_name"></span>
+        </form>
+    </div>
+</nav>
+<div class="container-fluid" ng-if="apc.isAuthorized" ng-view>
+</div>
+</body>
+</html>

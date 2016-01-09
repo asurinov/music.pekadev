@@ -10,8 +10,7 @@ var runSequence = require('run-sequence');
 var templateCache = require('gulp-angular-templatecache');
 
 var config = {
-    viewsSourcePath: './src/views/**/*.html',
-    templatesSourcePath: './src/views/**/*.html',
+    templatesSourcePath: './src/templates/**/*.html',
     mediaSourcePath: './src/media/**/*.*',
     viewsDestinationPath: './views',
     indexView: 'index.html',
@@ -65,7 +64,7 @@ gulp.task('Clean', function () {
 });
 
 gulp.task('CopyViews', function () {
-    return gulp.src([config.viewsSourcePath, config.templatesSourcePath])
+    return gulp.src([config.templatesSourcePath])
         .pipe(gulp.dest(config.viewsDestinationPath));
 });
 
