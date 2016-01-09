@@ -7,10 +7,10 @@
         .controller('tracksController', tracksController);
 
     tracksController['$inject'] = ['$scope', 'appService',
-        'ngAudio', 'stringService'];
+        'ngAudio', 'stringService', '$routeParams'];
 
     function tracksController($scope, appService,
-        ngAudio, stringService){
+        ngAudio, stringService, $routeParams){
 
         var vm = this;
 
@@ -23,10 +23,14 @@
         init();
 
         function init(){
+            if($routeParams.trackId){
+                getAudioById($routeParams.trackId);
+            }
             resetPaging();
         }
 
         vm.loadGrid = loadGrid;
+        vm.copyLink = copyLink;
 
         $scope.audioPlayer = null;
 
@@ -113,6 +117,13 @@
             });
         }
 
+        function getAudioById(trackId){
+            appService.getAudioById(trackId).then(function(res){
+                recalculatePaging(vm.paging, res.length);
+                $scope.audios = res;
+            });
+        }
+
         function getPopularList(){
             if(vm.dataType !== 'popular'){
                 vm.dataType = 'popular';
@@ -144,6 +155,10 @@
                 maxSize: 10,
                 itemsPerPage: 30
             };
+        }
+
+        function copyLink(record){
+            var link = appService.getTrackLink(record);
         }
     }
 })(angular, moment);

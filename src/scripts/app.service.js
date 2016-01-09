@@ -25,6 +25,8 @@
         vm.getUserInfo = getUserInfo;
         vm.getPopularList = getPopularList;
         vm.getAlbums = getAlbums;
+        vm.getAudioById = getAudioById;
+        vm.getTrackLink = getTrackLink;
 
         function setAccessParams(token, userId){
             vm.token = token;
@@ -40,15 +42,6 @@
         }
 
         function auth(){
-            var params = {
-                client_id: clientId,
-                display: 'popup',
-                redirect_uri: urlService.getHost(),
-                scope: 'friends,audio',
-                response_type: 'token',
-                v: apiVersion
-            };
-
             var deferred = $q.defer();
 
             VK.Auth.login(function(response) {
@@ -113,6 +106,15 @@
             return callApi('audio.get', params);
         }
 
+        function getAudioById(id){
+            var params = {
+                audios: id,
+                v: apiVersion
+            };
+
+            return callApi('audio.getById', params);
+        }
+
         function getPopularList(){
             var params = {
                 access_token: vm.token,
@@ -142,6 +144,10 @@
                 }
             });
             return deferred.promise;
+        }
+
+        function getTrackLink(record){
+            return urlService.getHost() + '/track/' + record.owner_id + '_' + record.id;
         }
     }
 })();

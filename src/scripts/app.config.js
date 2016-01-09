@@ -29,6 +29,11 @@
                     templateUrl: '/partials/playlist.view.html',
                     controller: 'playlistController'
                 })
+                .when('/track/:trackId', {
+                    templateUrl: '/partials/tracks.view.html',
+                    controller: 'tracksController',
+                    controllerAs: 'trc'
+                })
                 .otherwise({
                     redirectTo: '/'
                 });
