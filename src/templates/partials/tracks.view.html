@@ -46,11 +46,14 @@
                 <th>Ссылка</th>
             </tr>
             <tr ng-repeat="audio in audios">
-                <th><span class="glyphicon" ng-class="{'glyphicon-pause' : audio.playing, 'glyphicon-play': !audio.playing }" ng-click="togglePlayback(audio)"></span></th>
+                <td class="text-center"><span class="glyphicon" ng-class="{'glyphicon-pause' : audio.playing, 'glyphicon-play': !audio.playing }" ng-click="togglePlayback(audio)"></span></td>
                 <td ng-bind="audio.artist"></td>
                 <td ng-bind="audio.title"></td>
                 <td class="text-center" ng-bind="audio.duration | trackTime"></td>
-                <td class="text-center"><a ng-href="{{audio.url}}" download="">Скачать</a></td>
+                <td class="text-center track-actions">
+                    <a ng-href="{{audio.url}}" download=""><i class="glyphicon glyphicon-download"></i></a>
+                    <span class="glyphicon glyphicon-share" ng-click="trc.copyLink(audio)"></span>
+                </td>
             </tr>
         </table>
     </div>

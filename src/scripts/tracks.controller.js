@@ -159,6 +159,7 @@
 
         function copyLink(record){
             var link = appService.getTrackLink(record);
+            //window.clipboardData.setData('text/uri-list', link);
         }
     }
 })(angular, moment);
