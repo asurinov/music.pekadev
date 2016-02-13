@@ -1,0 +1,43 @@
+<div>
+    <div class="row">
+        <div class="col-md-offset-8 col-md-4">
+            <div class="row">
+                <form class="form-inline">
+                    <div class="form-group pull-right">
+                        <span class="form-control" ng-bind="audioPlayer.currentTime | trackTime"></span>
+                        <input class="form-control" type=range min=0 max=1 step=0.01 ng-model="audioPlayer.progress"/>
+                    </div>
+                </form>
+            </div>
+            <div class="row">
+                <form class="form-inline">
+                    <div class="form-group pull-right">
+                        <label for="volume-control">Громкость</label>
+                        <input id="volume-control" class="form-control" type=range min=0 max=1 step=0.01 ng-model="audioPlayer.volume"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row peka-audio-grid">
+        <table class="table table-bordered table-condensed">
+            <tr>
+                <th></th>
+                <th>Исполнитель</th>
+                <th>Название</th>
+                <th>Длительность</th>
+                <th>Ссылка</th>
+            </tr>
+            <tr ng-repeat="audio in tracks">
+                <td class="text-center"><span class="glyphicon" ng-class="{'glyphicon-pause' : audio.playing, 'glyphicon-play': !audio.playing }" ng-click="tgc.togglePlayback(audio)"></span></td>
+                <td ng-bind="audio.artist"></td>
+                <td ng-bind="audio.title"></td>
+                <td class="text-center" ng-bind="audio.duration | trackTime"></td>
+                <td class="text-center track-actions">
+                    <a ng-href="{{audio.url}}" download=""><i class="glyphicon glyphicon-download"></i></a>
+                    <span class="glyphicon glyphicon-share" ng-click="tgc.copyLink(audio)"></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

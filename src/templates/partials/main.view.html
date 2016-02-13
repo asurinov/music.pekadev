@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <input type="button" class="btn btn-primary" ng-click="getAudioList()" value="Загрузить список моих аудиозаписей"/>
+                <button class="btn btn-primary" ng-click="getPopularList()">
+                    <span class="glyphicon glyphicon-trash"></span>
+                    Популярное
+                </button>
+            </div>
+            <div class="row">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Поиск аудиозаписей" ng-model="trc.pattern">
+                    </div>
+                    <input type="button" class="form-control" value="Искать" ng-click="audioSearch(true)" ng-disabled="!trc.pattern">
+                </form>
+            </div>
+        </div>
+    </div>
+    <track-grid tracks="audios"></track-grid>
+    <div class="peka-grid-paging">
+        <div class="row">
+            <span class="pull-left" ng-bind="trc.paging.totalPagesCaption"></span>
+            <span class="pull-right" ng-bind="trc.paging.totalItemsCaption"></span>
+        </div>
+        <uib-pagination class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+                        ng-model="trc.paging.currentPage"
+                        ng-change="trc.loadGrid()"
+                        total-items="trc.paging.totalItems"
+                        items-per-page="trc.paging.itemsPerPage"
+                        max-size="trc.paging.maxSize"
+                        boundary-links="true"></uib-pagination>
+    </div>
+</div>

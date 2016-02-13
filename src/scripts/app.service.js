@@ -27,6 +27,7 @@
         vm.getAlbums = getAlbums;
         vm.getAudioById = getAudioById;
         vm.getTrackLink = getTrackLink;
+        vm.getAlbumTracks = getAlbumTracks;
 
         function setAccessParams(token, userId){
             vm.token = token;
@@ -131,6 +132,16 @@
             };
 
             return callApi('audio.getAlbums', params);
+        }
+
+        function getAlbumTracks(albumId){
+            var params = {
+                album_id: albumId,
+                access_token: vm.token,
+                v: apiVersion
+            };
+
+            return callApi('audio.get', params);
         }
 
         function callApi(method, params){

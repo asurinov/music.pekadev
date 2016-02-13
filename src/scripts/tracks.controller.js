@@ -6,17 +6,12 @@
         .module('app')
         .controller('tracksController', tracksController);
 
-    tracksController['$inject'] = ['$scope', 'appService',
-        'ngAudio', 'stringService', '$routeParams'];
+    tracksController['$inject'] = ['$scope', 'appService', 'stringService', '$routeParams'];
 
-    function tracksController($scope, appService,
-        ngAudio, stringService, $routeParams){
+    function tracksController($scope, appService, stringService, $routeParams){
 
         var vm = this;
 
-        var volume = 0.2;
-
-        vm.currentRecord = {};
         vm.paging = null;
         vm.dataType = null;
 
@@ -32,13 +27,10 @@
         vm.loadGrid = loadGrid;
         vm.copyLink = copyLink;
 
-        $scope.audioPlayer = null;
-
         $scope.getFriendsList = getFriendsList;
         $scope.getAudioList = getAudioList;
         $scope.getPopularList = getPopularList;
         $scope.audioSearch = audioSearch;
-        $scope.togglePlayback = togglePlayback;
 
         $scope.$on('$destroy', function(){
             if($scope.audioPlayer){
@@ -62,30 +54,6 @@
             }
         }
 
-        function togglePlayback(record){
-            if(record.playing){
-                $scope.audioPlayer.pause();
-                record.playing = false;
-            } else {
-                if(record.url !== vm.currentRecord.url){
-                    vm.currentRecord.playing = false;
-                    vm.currentRecord = record;
-                    if($scope.audioPlayer){
-                        volume = $scope.audioPlayer.volume;
-                        $scope.audioPlayer.pause();
-                    }
-                }
-                if(!$scope.audioPlayer || $scope.audioPlayer.id !== record.url) {
-                    $scope.audioPlayer = ngAudio.play(record.url);
-                    $scope.audioPlayer.setVolume(volume);
-                } else {
-                    $scope.audioPlayer.play();
-                }
-
-                record.playing = true;
-            }
-        }
-
         function getFriendsList(){
             appService.getFriendsList().then(function(res){
                 $scope.friends = res;
@@ -106,7 +74,7 @@
         }
 
         function getAudioList(){
-            if(vm.dataType !== 'mytracks'){
+            if (vm.dataType !== 'mytracks') {
                 vm.dataType = 'mytracks';
                 resetPaging();
             }

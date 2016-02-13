@@ -1,4 +1,4 @@
-<div ng-controller="playlistController as pc">
+<div>
     <div class="row pekadev-audio-grid">
         <h3 class="text-center">Плейлисты</h3>
         <table class="table table-bordered table-condensed">
@@ -11,16 +11,5 @@
                 </td>
             </tr>
         </table>
-        <p>
-            <span>Validator viewValue: </span>
-            <span class="text-warning" ng-hide="viewValue">undefined</span>
-            <span ng-show="viewValue" ng-bind="viewValue"></span>
-        </p>
-        <p>
-            <span>Mask Value: </span>
-            <span class="text-danger" ng-hide="pc.maskedValue">undefined</span>
-            <span ng-show="pc.maskedValue" ng-bind="pc.maskedValue"></span>
-        </p>
-        <input type="text" ng-model="getProp().value" ui-mask="(999)999-99-99" ui-options="pc.options" custom-validate/>
     </div>
 </div>

@@ -8,17 +8,22 @@
 
     function playlistController($scope, $routeParams, appService){
         var vm = this;
-        vm.maskedValue = '2222222222';
 
-        vm.options = {
-            clearOnBlur: false
-        };
-
-        getAlbums();
+        if($routeParams.listId){
+            getAlbumTracks($routeParams.listId);
+        }else {
+            getAlbums();
+        }
 
         function getAlbums(){
             appService.getAlbums().then(function(res){
                 $scope.albums = res.items;
+            });
+        }
+
+        function getAlbumTracks(albumId){
+            appService.getAlbumTracks(albumId).then(function(res){
+                $scope.audios = res.items;
             });
         }
     }

@@ -17,17 +17,19 @@
 
             $routeProvider
                 .when('/', {
-                    templateUrl: '/partials/tracks.view.html',
+                    templateUrl: '/partials/main.view.html',
                     controller: 'tracksController',
                     controllerAs: 'trc'
                 })
                 .when('/playlists', {
                     templateUrl: '/partials/playlists.view.html',
-                    controller: 'playlistController'
+                    controller: 'playlistController',
+                    controllerAs: 'pc'
                 })
                 .when('/playlist/:listId', {
                     templateUrl: '/partials/playlist.view.html',
-                    controller: 'playlistController'
+                    controller: 'playlistController',
+                    controllerAs: 'pc'
                 })
                 .when('/track/:trackId', {
                     templateUrl: '/partials/tracks.view.html',
