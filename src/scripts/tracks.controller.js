@@ -12,6 +12,14 @@
 
         var vm = this;
 
+        var trackType = {
+            my: 'mytracks',
+            popular: 'popular',
+            search: 'search',
+            recommendationByUser: 'recommendationByUser',
+            recommendationByTrack: 'recommendationByUser'
+        };
+
         vm.paging = null;
         vm.dataType = null;
 
@@ -31,6 +39,7 @@
         $scope.getAudioList = getAudioList;
         $scope.getPopularList = getPopularList;
         $scope.audioSearch = audioSearch;
+        $scope.getRecommendationsByUser = getRecommendationsByUser;
 
         $scope.$on('$destroy', function(){
             if($scope.audioPlayer){
@@ -40,14 +49,20 @@
 
         function loadGrid(){
             switch(vm.dataType){
-                case 'popular':
+                case trackType.popular:
                     getPopularList();
                     break;
-                case 'search':
+                case trackType.search:
                     audioSearch();
                     break;
-                case 'mytracks':
+                case trackType.my:
                     getAudioList();
+                    break;
+                case trackType.recommendationByUser:
+                    getRecommendationsByUser();
+                    break;
+                case trackType.recommendationByTrack:
+                    getRecommendationsByTrack();
                     break;
                 default:
                     break;
@@ -60,11 +75,8 @@
             });
         }
 
-        function audioSearch(reset){
-            if(vm.dataType !== 'search' || reset){
-                vm.dataType = 'search';
-                resetPaging();
-            }
+        function audioSearch(){
+            checkPaging(trackType.search);
 
             appService.searchAudio(vm.pattern, vm.paging).then(function(res){
                 recalculatePaging(vm.paging, res.count);
@@ -74,10 +86,7 @@
         }
 
         function getAudioList(){
-            if (vm.dataType !== 'mytracks') {
-                vm.dataType = 'mytracks';
-                resetPaging();
-            }
+            checkPaging(trackType.my)
 
             appService.getAudioList(vm.paging).then(function(res){
                 recalculatePaging(vm.paging, res.count);
@@ -93,10 +102,7 @@
         }
 
         function getPopularList(){
-            if(vm.dataType !== 'popular'){
-                vm.dataType = 'popular';
-                resetPaging();
-            }
+            checkPaging(trackType.popular);
 
             appService.getPopularList().then(function(res){
                 vm.paging.totalItems = res.length;
@@ -105,6 +111,23 @@
                 vm.paging.totalPagesCaption = stringService.getWordEnding(vm.paging.totalPages, 'pages');
                 vm.paging.totalItemsCaption = stringService.getWordEnding(vm.paging.totalItems, 'records');
                 $scope.audios = res;
+            });
+        }
+
+        function getRecommendationsByUser(){
+            checkPaging(trackType.recommendationByUser);
+            getRecommendationsList(appService.getUserId())
+        }
+
+        function getRecommendationsByTrack(){
+            checkPaging(trackType.recommendationByTrack);
+            getRecommendationsList();
+        }
+
+        function getRecommendationsList(params){
+            return appService.getRecommendations(params, vm.paging).then(function(res){
+                recalculatePaging(vm.paging, res.count);
+                $scope.audios = res.items;
             });
         }
 
@@ -128,6 +151,13 @@
         function copyLink(record){
             var link = appService.getTrackLink(record);
             //window.clipboardData.setData('text/uri-list', link);
+        }
+
+        function checkPaging(audioType){
+            if (vm.dataType !== audioType) {
+                vm.dataType = audioType;
+                resetPaging();
+            }
         }
     }
 })(angular, moment);

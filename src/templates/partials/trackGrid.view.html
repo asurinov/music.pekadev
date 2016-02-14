@@ -1,25 +1,23 @@
 <div>
     <div class="row">
-        <div class="col-md-offset-8 col-md-4">
-            <div class="row">
-                <form class="form-inline">
-                    <div class="form-group pull-right">
-                        <span class="form-control" ng-bind="audioPlayer.currentTime | trackTime"></span>
-                        <input class="form-control" type=range min=0 max=1 step=0.01 ng-model="audioPlayer.progress"/>
-                    </div>
-                </form>
-            </div>
-            <div class="row">
-                <form class="form-inline">
-                    <div class="form-group pull-right">
-                        <label for="volume-control">Громкость</label>
-                        <input id="volume-control" class="form-control" type=range min=0 max=1 step=0.01 ng-model="audioPlayer.volume"/>
-                    </div>
-                </form>
-            </div>
-        </div>
+        <span class="col-md-2">
+            <form class="form-inline">
+                <div class="form-group">
+                    <span class="form-control" ng-bind="audioPlayer.currentTime | trackTime"></span>
+                    <input class="form-control" type=range min=0 max=1 step=0.01 ng-model="audioPlayer.progress"/>
+                </div>
+            </form>
+        </span>
+        <span class="col-md-offset-8 col-md-2">
+            <form class="form-inline">
+                <div class="form-group pull-right">
+                    <label for="volume-control">Громкость</label>
+                    <input id="volume-control" class="form-control" type=range min=0 max=1 step=0.01 ng-model="audioPlayer.volume"/>
+                </div>
+            </form>
+        </span>
     </div>
-    <div class="row peka-audio-grid">
+    <div class="row pekadev-audio-grid">
         <table class="table table-bordered table-condensed">
             <tr>
                 <th></th>

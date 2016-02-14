@@ -28,6 +28,7 @@
         vm.getAudioById = getAudioById;
         vm.getTrackLink = getTrackLink;
         vm.getAlbumTracks = getAlbumTracks;
+        vm.getRecommendations = getRecommendations;
 
         function setAccessParams(token, userId){
             vm.token = token;
@@ -82,28 +83,17 @@
         }
 
         function searchAudio(pattern, paging){
-            var params = {
+            var params = angular.extend(getParamsWithPaging(paging), {
                 q: pattern,
                 auto_complete: 1,
                 sort: 2,
-                offset: (paging.currentPage - 1) * paging.itemsPerPage,
-                count: paging.itemsPerPage,
-                access_token: vm.token,
-                v: apiVersion
-            };
+            });
 
             return callApi('audio.search', params);
         }
 
         function getAudioList(paging){
-            var params = {
-                owner_id: getUserId(),
-                access_token: vm.token,
-                offset: (paging.currentPage - 1) * paging.itemsPerPage,
-                count: paging.itemsPerPage,
-                v: apiVersion
-            };
-
+            var params = angular.extend(getParamsWithPaging(paging), {owner_id: getUserId()});
             return callApi('audio.get', params);
         }
 
@@ -117,30 +107,17 @@
         }
 
         function getPopularList(){
-            var params = {
-                access_token: vm.token,
-                v: apiVersion
-            };
-
+            var params = getBaseParam();
             return callApi('audio.getPopular', params);
         }
 
         function getAlbums(){
-            var params = {
-                access_token: vm.token,
-                v: apiVersion
-            };
-
+            var params = getBaseParam();
             return callApi('audio.getAlbums', params);
         }
 
         function getAlbumTracks(albumId){
-            var params = {
-                album_id: albumId,
-                access_token: vm.token,
-                v: apiVersion
-            };
-
+            var params = angular.extend(getBaseParam(), {album_id: albumId});
             return callApi('audio.get', params);
         }
 
@@ -159,6 +136,25 @@
 
         function getTrackLink(record){
             return urlService.getHost() + '/track/' + record.owner_id + '_' + record.id;
+        }
+
+        function getRecommendations(param, paging){
+            var params = angular.extend(getParamsWithPaging(paging), param);
+            return callApi('audio.getRecommendations', params);
+        }
+
+        function getParamsWithPaging(paging){
+            return angular.extend(getBaseParam(), {
+                offset: (paging.currentPage - 1) * paging.itemsPerPage,
+                count: paging.itemsPerPage,
+            })
+        }
+
+        function getBaseParam(){
+            return {
+                access_token: vm.token,
+                v: apiVersion
+            };
         }
     }
 })();

@@ -1,13 +1,18 @@
 var gulp = require("gulp");
-var concat = require("gulp-concat");
-var less = require("gulp-less");
-var inject = require("gulp-inject");
 var del = require('del');
-var angularSort = require('gulp-angular-filesort');
 var series = require('stream-series');
 var bowerSrc = require('main-bower-files');
 var runSequence = require('run-sequence');
-var templateCache = require('gulp-angular-templatecache');
+var gulpLoadPlugins = require('gulp-load-plugins');
+var plugins = gulpLoadPlugins();
+
+//var concat = require("gulp-concat");
+//var less = require("gulp-less");
+//var inject = require("gulp-inject");
+//var angularSort = require('gulp-angular-filesort');
+//var templateCache = require('gulp-angular-templatecache');
+//var uglify = require("gulp-uglify");
+//var gulpIf = require('gulp-if');
 
 var config = {
     templatesSourcePath: './src/templates/**/*.html',
@@ -23,6 +28,8 @@ var config = {
     mediaDestinationSubPath: '/media'
 };
 
+var debug = true;
+
 gulp.task('BuildFonts', function () {
     return gulp.src([
         './bower_components/bootstrap/fonts/**/*.woff',
@@ -37,12 +44,13 @@ gulp.task('BuildStyles', function () {
         .pipe(gulp.dest(config.distPath + config.styleDestinationSubPath));
 
     var app = gulp.src([config.appStyleSourcePath])
-        .pipe(less())
-        .pipe(concat('style.css'))
+        .pipe(plugins.less())
+        .pipe(plugins.concat('style.css'))
+        .pipe(plugins.if(!debug, plugins.cssnano()))
         .pipe(gulp.dest(config.distPath + config.styleDestinationSubPath));
 
     return gulp.src([config.viewsDestinationPath + '/' + config.indexView])
-        .pipe(inject(series(vendor, app), { ignorePath: '/public' }))
+        .pipe(plugins.inject(series(vendor, app), { ignorePath: '/public' }))
         .pipe(gulp.dest(config.viewsDestinationPath, {overwrite: true}));
 });
 
@@ -51,11 +59,13 @@ gulp.task('BuildScripts', function () {
         .pipe(gulp.dest(config.distPath + config.scriptsDestinationSubPath));
 
     var app = gulp.src([config.appScriptsSourcePath])
-        .pipe(angularSort())
+        .pipe(plugins.angularFilesort())
+        .pipe(plugins.if(!debug, plugins.concat('app.js')))
+        .pipe(plugins.if(!debug, plugins.uglify()))
         .pipe(gulp.dest(config.distPath + config.scriptsDestinationSubPath));
 
     return gulp.src([config.viewsDestinationPath + '/' + config.indexView])
-        .pipe(inject(series(vendor, app), { ignorePath: '/public' }))
+        .pipe(plugins.inject(series(vendor, app), { ignorePath: '/public' }))
         .pipe(gulp.dest(config.viewsDestinationPath, {overwrite: true}));
 });
 
@@ -75,11 +85,16 @@ gulp.task('CopyMedia', function () {
 
 gulp.task('CacheTemplates', function () {
     return gulp.src(config.templatesSourcePath)
-        .pipe(templateCache({module: 'app', root: '/'}))
+        .pipe(plugins.angularTemplatecache({module: 'app', root: '/'}))
         .pipe(gulp.dest('./src/scripts/'));
 });
 
 gulp.task('buildAppResources', function(){
+    runSequence('Clean', ['CopyViews', 'CopyMedia', 'CacheTemplates', 'BuildFonts'], 'BuildStyles', 'BuildScripts');
+});
+
+gulp.task('release', function(){
+    debug = false;
     runSequence('Clean', ['CopyViews', 'CopyMedia', 'CacheTemplates', 'BuildFonts'], 'BuildStyles', 'BuildScripts');
 });
 

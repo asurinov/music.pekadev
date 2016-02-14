@@ -1,15 +1,6 @@
-<div>
-    <div class="row pekadev-audio-grid">
-        <h3 class="text-center">Плейлисты</h3>
-        <table class="table table-bordered table-condensed">
-            <tr>
-                <th>Наименование</th>
-            </tr>
-            <tr ng-repeat="album in albums">
-                <td>
-                    <a ng-href="/playlist/{{album.id}}">{{album.title}}</a>
-                </td>
-            </tr>
-        </table>
+<div class="row pekadev-playlists">
+    <h3 class="text-center">Плейлисты</h3>
+    <div class="row">
+        <a ng-repeat="album in albums" href="#" ng-href="/playlist/{{album.id}}" class="btn btn-primary" role="button">{{album.title}}</a>
     </div>
 </div>
