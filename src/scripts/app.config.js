@@ -4,7 +4,7 @@
 (function(){
     angular
         .module('app')
-        .config(['$locationProvider', '$httpProvider', '$routeProvider', function ($locationProvider,$httpProvider, $routeProvider) {
+        .config(['$locationProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', function ($locationProvider,$httpProvider, $stateProvider, $urlRouterProvider) {
             $locationProvider.html5Mode(true);
             $httpProvider.defaults.useXDomain = true;
             delete $httpProvider.defaults.headers.common['X-Requested-With'];
@@ -15,29 +15,37 @@
 
             VK.UI.button('vk-auth');
 
-            $routeProvider
-                .when('/', {
-                    templateUrl: '/partials/main.view.html',
+            // For any unmatched url, redirect to /state1
+            $urlRouterProvider.otherwise("/");
+
+            $stateProvider
+                .state('main', {
+                    url: "/",
+                    templateUrl: "/partials/main.view.html",
                     controller: 'tracksController',
                     controllerAs: 'trc'
                 })
-                .when('/playlists', {
-                    templateUrl: '/partials/playlists.view.html',
+                .state('playlists', {
+                    url: "/playlists",
+                    templateUrl: "/partials/playlists.view.html",
                     controller: 'playlistController',
                     controllerAs: 'pc'
                 })
-                .when('/playlist/:listId', {
+                .state('playlists.new', {
+                    url: "/new",
                     templateUrl: '/partials/playlist.view.html',
-                    controller: 'playlistController',
-                    controllerAs: 'pc'
+                    controller: 'playlistController'
                 })
-                .when('/track/:trackId', {
+                .state('playlists.element', {
+                    url: "/{listId}",
+                    templateUrl: '/partials/playlist.view.html',
+                    controller: 'playlistController'
+                })
+                .state('track.element', {
+                    url: "/track/:trackId",
                     templateUrl: '/partials/tracks.view.html',
                     controller: 'tracksController',
                     controllerAs: 'trc'
-                })
-                .otherwise({
-                    redirectTo: '/'
                 });
         }]);
 })();

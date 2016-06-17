@@ -6,9 +6,9 @@
         .module('app')
         .controller('tracksController', tracksController);
 
-    tracksController['$inject'] = ['$scope', 'appService', 'stringService', '$routeParams'];
+    tracksController['$inject'] = ['$scope', 'appService', 'stringService', '$stateParams'];
 
-    function tracksController($scope, appService, stringService, $routeParams){
+    function tracksController($scope, appService, stringService, $stateParams){
 
         var vm = this;
 
@@ -26,8 +26,8 @@
         init();
 
         function init(){
-            if($routeParams.trackId){
-                getAudioById($routeParams.trackId);
+            if($stateParams.trackId){
+                getAudioById($stateParams.trackId);
             }
             resetPaging();
         }

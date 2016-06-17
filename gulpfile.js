@@ -6,14 +6,6 @@ var runSequence = require('run-sequence');
 var gulpLoadPlugins = require('gulp-load-plugins');
 var plugins = gulpLoadPlugins();
 
-//var concat = require("gulp-concat");
-//var less = require("gulp-less");
-//var inject = require("gulp-inject");
-//var angularSort = require('gulp-angular-filesort');
-//var templateCache = require('gulp-angular-templatecache');
-//var uglify = require("gulp-uglify");
-//var gulpIf = require('gulp-if');
-
 var config = {
     templatesSourcePath: './src/templates/**/*.html',
     mediaSourcePath: './src/media/**/*.*',
@@ -98,6 +90,6 @@ gulp.task('release', function(){
     runSequence('Clean', ['CopyViews', 'CopyMedia', 'CacheTemplates', 'BuildFonts'], 'BuildStyles', 'BuildScripts');
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', ['buildAppResources'], function() {
     gulp.watch('./src/**/*', ['buildAppResources']);
 });

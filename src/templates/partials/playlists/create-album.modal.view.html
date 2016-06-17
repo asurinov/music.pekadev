@@ -1,0 +1,12 @@
+<div class="modal-header">
+    <h3 class="modal-title">Создание нового плейлиста</h3>
+</div>
+<div class="modal-body">
+<form name="albumForm">
+    <input type="text" class="form-control" ng-model="ac.albumName" required />
+</form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ac.ok()" ng-disabled="albumForm.$invalid">Сохранить</button>
+    <button class="btn btn-default" type="button" ng-click="ac.cancel()">Отмена</button>
+</div>

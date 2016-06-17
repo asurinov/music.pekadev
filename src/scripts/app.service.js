@@ -30,6 +30,12 @@
         vm.getAlbumTracks = getAlbumTracks;
         vm.getRecommendations = getRecommendations;
 
+        vm.createAlbum = createAlbum;
+
+        function createAlbum(name){
+            return callApi('audio.addAlbum', { title: name});
+        }
+
         function setAccessParams(token, userId){
             vm.token = token;
             vm.userId = userId;
