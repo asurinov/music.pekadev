@@ -25,18 +25,19 @@
             </div>
         </div>
     </div>
-    <track-grid tracks="audios"></track-grid>
     <div class="peka-grid-paging">
+         <ul uib-pagination class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+            ng-model="trc.paging.currentPage"
+            ng-change="trc.loadGrid()"
+            total-items="trc.paging.totalItems"
+            items-per-page="trc.paging.itemsPerPage"
+            max-size="trc.paging.maxSize"
+            boundary-links="true">
+        </ul>
         <div class="row">
             <span class="pull-left" ng-bind="trc.paging.totalPagesCaption"></span>
             <span class="pull-right" ng-bind="trc.paging.totalItemsCaption"></span>
         </div>
-        <uib-pagination class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
-                        ng-model="trc.paging.currentPage"
-                        ng-change="trc.loadGrid()"
-                        total-items="trc.paging.totalItems"
-                        items-per-page="trc.paging.itemsPerPage"
-                        max-size="trc.paging.maxSize"
-                        boundary-links="true"></uib-pagination>
     </div>
+    <track-grid tracks="audios"></track-grid>
 </div>

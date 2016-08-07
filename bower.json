@@ -1,5 +1,5 @@
 {
-  "name": "NuiPogodka",
+  "name": "MusicPekadev",
   "version": "0.0.0",
   "authors": [
     "MacheteDSMS <asurinov8@gmail.com>"
@@ -15,12 +15,13 @@
   "dependencies": {
     "bootstrap": "~3.3.5",
     "angular": "~1.4.7",
-    "angular-audio": "~1.7.1",
     "moment": "~2.10.6",
     "moment-duration-format": "~1.3.0",
     "angular-route": "~1.4.8",
-    "angular-bootstrap": "~1.1.0",
-    "angular-ui-router": "ui-router#^0.2.18"
+    "angular-bootstrap": "^2.0.1",
+    "angular-ui-router": "ui-router#^0.2.18",
+    "howler.js": "howler#^2.0.0",
+    "font-awesome": "^4.6.3"
   },
   "overrides": {
     "bootstrap": {
@@ -30,6 +31,9 @@
     },
     "jquery": {
       "main": []
+    },
+    "font-awesome": {
+      "main": ["./css/font-awesome.min.css"]
     }
   },
   "devDependencies": {

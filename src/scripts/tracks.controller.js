@@ -42,8 +42,8 @@
         $scope.getRecommendationsByUser = getRecommendationsByUser;
 
         $scope.$on('$destroy', function(){
-            if($scope.audioPlayer){
-                $scope.audioPlayer.stop();
+            if($scope.player){
+                $scope.player.stop();
             }
         });
 

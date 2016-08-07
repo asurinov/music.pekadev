@@ -1,12 +1,35 @@
 <div>
-    <div class="row">
-        <div class="col-md-2 col-xs-12">
-            <span class="form-control" ng-bind="audioPlayer.currentTime | trackTime"></span>
-            <input class="form-control" type=range min=0 max=1 step=0.01 ng-model="audioPlayer.progress"/>
-        </div>
-        <div class="col-md-offset-8 col-md-2 col-xs-12">
-            <label for="volume-control">Громкость</label>
-            <input id="volume-control" class="form-control" type=range min=0 max=1 step=0.01 ng-model="audioPlayer.volume"/>
+    <div class="audio-controls">
+        <div class="row">
+            <div class="col-lg-2 col-sm-2">
+                <!--<button type="button" class="btn btn-primary" ng-click="">
+                    <span class="fa fa-step-backward"></span>
+                </button>-->
+                <button type="button" class="btn btn-primary" ng-click="tgc.toggle()" ng-disabled="!tracks">
+                    <span class="fa" ng-class="{'fa-play': !record.playing, 'fa-pause': record.playing}"></span>
+                </button>
+                <button type="button" class="btn btn-primary" ng-class="{'active': repeatMode}" ng-click="repeatMode = !repeatMode">
+                    <span class="fa fa-repeat"></span>
+                </button>
+                <!--<button class="btn btn-primary" ng-click="">
+                    <span class="fa fa-step-forward"></span>
+                </button>-->
+            </div>
+            <div class="col-lg-4 col-sm-10">
+                <div class="track-info" ng-show="record.data">
+                    <span ng-bind="record.author"></span>
+                    <span>&#8212</span>
+                    <span ng-bind="record.title"></span>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-12">
+                <label for="progress-control">Прогресс</label>
+                <progress id="progress-control" class="progress-control" min="0" max="1" ng-value="record.progress"></progress>
+            </div>
+            <div class="col-lg-2 col-sm-12">
+                <label for="volume-control">Громкость</label>
+                <input id="volume-control" type=range min=0 max=1 step=0.01 ng-model="volume"/>
+            </div>
         </div>
     </div>
     <div class="row pekadev-audio-grid">
@@ -19,10 +42,13 @@
                 <th>Ссылка</th>
             </tr>
             <tr ng-repeat="audio in tracks">
-                <td class="text-center"><span class="glyphicon" ng-class="{'glyphicon-pause' : audio.playing, 'glyphicon-play': !audio.playing }" ng-click="tgc.togglePlayback(audio)"></span></td>
+                <td class="text-center">
+                    <span class="glyphicon glyphicon-play" ng-show="record.id !== audio.id || !audio.playing" ng-click="tgc.play(audio, $index)"></span>
+                    <span class="glyphicon glyphicon-pause" ng-show="record.id === audio.id && audio.playing" ng-click="tgc.pause(audio)"></span>
+                </td>
                 <td ng-bind="audio.artist"></td>
                 <td ng-bind="audio.title"></td>
-                <td class="text-center" ng-bind="audio.duration | trackTime"></td>
+                <td class="text-center" ng-bind="audio.duration"></td>
                 <td class="text-center track-actions">
                     <a ng-href="{{audio.url}}" download=""><i class="glyphicon glyphicon-download"></i></a>
                     <span class="glyphicon glyphicon-share" ng-click="tgc.copyLink(audio)"></span>

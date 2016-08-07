@@ -2,9 +2,7 @@ var gulp = require("gulp");
 var del = require('del');
 var series = require('stream-series');
 var bowerSrc = require('main-bower-files');
-var runSequence = require('run-sequence');
-var gulpLoadPlugins = require('gulp-load-plugins');
-var plugins = gulpLoadPlugins();
+var plugins = require('gulp-load-plugins')();
 
 var config = {
     templatesSourcePath: './src/templates/**/*.html',
@@ -26,24 +24,26 @@ gulp.task('BuildFonts', function () {
     return gulp.src([
         './bower_components/bootstrap/fonts/**/*.woff',
         './bower_components/bootstrap/fonts/**/*.woff2',
-        './bower_components/bootstrap/fonts/**/*.ttf'
+        './bower_components/bootstrap/fonts/**/*.ttf',
+        './bower_components/font-awesome/fonts/**/*.woff',
+        './bower_components/font-awesome/fonts/**/*.woff2',
+        './bower_components/font-awesome/fonts/**/*.ttf'
     ])
     .pipe(gulp.dest(config.distPath + config.fontsDestinationSubPath));
 });
 
-gulp.task('BuildStyles', function () {
-    var vendor = gulp.src(bowerSrc('**/*.css'))
+gulp.task('VendorStyles', function(){
+    return gulp.src(bowerSrc('**/*.css'))
+        .pipe(plugins.concat('vendors.css'))
         .pipe(gulp.dest(config.distPath + config.styleDestinationSubPath));
+});
 
-    var app = gulp.src([config.appStyleSourcePath])
+gulp.task('AppStyles', ['VendorStyles'], function () {
+    return gulp.src([config.appStyleSourcePath])
         .pipe(plugins.less())
         .pipe(plugins.concat('style.css'))
         .pipe(plugins.if(!debug, plugins.cssnano()))
         .pipe(gulp.dest(config.distPath + config.styleDestinationSubPath));
-
-    return gulp.src([config.viewsDestinationPath + '/' + config.indexView])
-        .pipe(plugins.inject(series(vendor, app), { ignorePath: '/public' }))
-        .pipe(gulp.dest(config.viewsDestinationPath, {overwrite: true}));
 });
 
 gulp.task('BuildScripts', function () {
@@ -81,13 +81,13 @@ gulp.task('CacheTemplates', function () {
         .pipe(gulp.dest('./src/scripts/'));
 });
 
-gulp.task('buildAppResources', function(){
-    runSequence('Clean', ['CopyViews', 'CopyMedia', 'CacheTemplates', 'BuildFonts'], 'BuildStyles', 'BuildScripts');
+gulp.task('buildAppResources', ['Clean'], function(cb){
+    plugins.sequence(['CopyViews', 'CopyMedia', 'CacheTemplates', 'BuildFonts'], 'AppStyles', 'BuildScripts')(cb);
 });
 
-gulp.task('release', function(){
+gulp.task('release', ['Clean'], function(cb){
     debug = false;
-    runSequence('Clean', ['CopyViews', 'CopyMedia', 'CacheTemplates', 'BuildFonts'], 'BuildStyles', 'BuildScripts');
+    plugins.sequence(['CopyViews', 'CopyMedia', 'CacheTemplates', 'BuildFonts'], 'AppStyles', 'BuildScripts')(cb);
 });
 
 gulp.task('watch', ['buildAppResources'], function() {
