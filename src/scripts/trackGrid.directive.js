@@ -47,7 +47,7 @@
                         $scope.record.playing = false;
                     }
 
-                    $scope.player = new Howl({src: [record.url]});
+                    $scope.player = new Howl({src: [record.url], html5: true});
 
                     $scope.player.on('load', function () {
                         $scope.player.play();
