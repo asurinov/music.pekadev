@@ -2,16 +2,24 @@
 @main-color-hover: lighten(@main-color, 20%);
 
 body {
-  padding: 80px 50px 50px;
+  padding: 80px 50px 60px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 
   .row {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
   }
 }
 
-@media screen and (max-width: 768px) {
-  body { padding-top: 150px; }
+@media screen and (max-width: 767px) {
+  body {
+    padding-top: 150px;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  body {
+    padding-bottom: 150px;
+  }
 }
 
 progress[value]::-webkit-progress-bar {
@@ -64,8 +72,6 @@ progress[value]::-webkit-progress-bar {
 }
 
 .pekadev-audio-grid {
-  max-height: 600px;
-  overflow-y: auto;
   border: 1px solid #ddd;
 
   @media screen and (max-width: 768px) {
@@ -119,10 +125,6 @@ progress[value]::-webkit-progress-bar {
   }
 }
 
-.peka-grid-paging {
-
-}
-
 a {
   color: #00B7FF;
 }
@@ -132,21 +134,5 @@ table {
 
   th {
     position: relative;
-  }
-}
-
-.draggable-edge {
-  position: absolute;
-  top: 0;
-  right: 0;
-  display: block;
-  width: 10px;
-  height: 100%;
-  border: 1px solid springgreen;
-  content: '';
-
-  &:hover {
-    cursor: e-resize;
-    color: red;
   }
 }

@@ -1,7 +1,7 @@
 <div>
     <div class="audio-controls">
         <div class="row">
-            <div class="col-lg-2 col-sm-2">
+            <div class="col-lg-2 col-md-2 col-sm-2">
                 <!--<button type="button" class="btn btn-primary" ng-click="">
                     <span class="fa fa-step-backward"></span>
                 </button>-->
@@ -15,18 +15,18 @@
                     <span class="fa fa-step-forward"></span>
                 </button>-->
             </div>
-            <div class="col-lg-4 col-sm-10">
+            <div class="col-lg-4 col-md-4 col-sm-10">
                 <div class="track-info" ng-show="record.data">
                     <span ng-bind="record.author"></span>
                     <span>&#8212</span>
                     <span ng-bind="record.title"></span>
                 </div>
             </div>
-            <div class="col-lg-4 col-sm-12">
+            <div class="col-lg-4 col-md-4 col-sm-12">
                 <label for="progress-control">Прогресс</label>
                 <progress id="progress-control" class="progress-control" min="0" max="1" ng-value="record.progress"></progress>
             </div>
-            <div class="col-lg-2 col-sm-12">
+            <div class="col-lg-2 col-md-2 col-sm-12">
                 <label for="volume-control">Громкость</label>
                 <input id="volume-control" type=range min=0 max=1 step=0.01 ng-model="volume"/>
             </div>
