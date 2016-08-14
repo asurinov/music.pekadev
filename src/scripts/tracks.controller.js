@@ -22,6 +22,13 @@
 
         vm.paging = null;
         vm.dataType = null;
+        vm.byArtist = false;
+
+        $scope.$on('searchByArtist', function (event, data) {
+            vm.pattern = data;
+            vm.byArtist = true;
+            $scope.audioSearch(true);
+        });
 
         init();
 
@@ -75,10 +82,10 @@
             });
         }
 
-        function audioSearch(){
-            checkPaging(trackType.search);
+        function audioSearch(resetPaging){
+            checkPaging(trackType.search, resetPaging);
 
-            appService.searchAudio(vm.pattern, vm.paging).then(function(res){
+            appService.searchAudio(vm.pattern, vm.byArtist, vm.paging).then(function(res){
                 recalculatePaging(vm.paging, res.count);
                 vm.paging.totalItems = res.count;
                 $scope.audios = res.items;
@@ -153,8 +160,8 @@
             //window.clipboardData.setData('text/uri-list', link);
         }
 
-        function checkPaging(audioType){
-            if (vm.dataType !== audioType) {
+        function checkPaging(audioType, forceResetPaging){
+            if (vm.dataType !== audioType || forceResetPaging) {
                 vm.dataType = audioType;
                 resetPaging();
             }

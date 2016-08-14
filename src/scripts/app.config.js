@@ -13,8 +13,6 @@
                 apiId: 5130198
             });
 
-            VK.UI.button('vk-auth');
-
             // For any unmatched url, redirect to /state1
             $urlRouterProvider.otherwise("/");
 

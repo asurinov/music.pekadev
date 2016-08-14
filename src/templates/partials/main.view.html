@@ -17,12 +17,16 @@
             </div>
             <div class="row">
                 <div class="input-group">
+                    <span class="input-group-addon">
+                        <label>По исполнителю</label>
+                        <input type="checkbox" aria-label="..." ng-model="trc.byArtist">
+                    </span>
                     <input type="text" class="form-control" placeholder="Поиск аудиозаписей" ng-model="trc.pattern" on-enter="audioSearch(true)">
-                <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" ng-click="audioSearch(true)" ng-disabled="!trc.pattern">
-                        <i class="fa fa-search"></i>
-                    </button>
-                </span>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" ng-click="audioSearch(true)" ng-disabled="!trc.pattern">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
                 </div>
             </div>
         </div>

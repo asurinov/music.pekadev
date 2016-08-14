@@ -24,6 +24,8 @@
             vm.pause = pause;
             vm.toggle = toggle;
 
+            vm.searchByArtist = searchByArtist;
+
             $scope.seekRecord = function(newVal){
                 if($scope.player){
                     $scope.player.pause();
@@ -116,6 +118,18 @@
                 // If the sound is still playing, continue stepping.
                 if ($scope.player.playing()) {
                     requestAnimationFrame(updateProgress);
+                }
+            }
+
+            function searchByArtist(artist){
+                resetPlayer();
+                $scope.$emit('searchByArtist', artist);
+            }
+
+            function resetPlayer(){
+                if($scope.player){
+                    $scope.player.stop();
+                    $scope.player.unload();
                 }
             }
         }

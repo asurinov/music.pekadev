@@ -46,10 +46,13 @@ gulp.task('AppStyles', ['VendorStyles'], function () {
         .pipe(gulp.dest(config.distPath + config.styleDestinationSubPath));
 });
 
-gulp.task('BuildScripts', function () {
-    var vendor = gulp.src(bowerSrc('**/*.js'))
+gulp.task('VendorsScripts', function(){
+    return gulp.src(bowerSrc('**/*.js'))
+        .pipe(plugins.concat('vendors.js'))
         .pipe(gulp.dest(config.distPath + config.scriptsDestinationSubPath));
+});
 
+gulp.task('AppScripts', ['VendorsScripts'], function () {
     var app = gulp.src([config.appScriptsSourcePath])
         .pipe(plugins.angularFilesort())
         .pipe(plugins.if(!debug, plugins.concat('app.js')))
@@ -57,12 +60,12 @@ gulp.task('BuildScripts', function () {
         .pipe(gulp.dest(config.distPath + config.scriptsDestinationSubPath));
 
     return gulp.src([config.viewsDestinationPath + '/' + config.indexView])
-        .pipe(plugins.inject(series(vendor, app), { ignorePath: '/public' }))
+        .pipe(plugins.inject(app, { ignorePath: '/public' }))
         .pipe(gulp.dest(config.viewsDestinationPath, {overwrite: true}));
 });
 
 gulp.task('Clean', function () {
-    return del([config.distPath + '/**/*.*', './views/**/*.*']);
+    return del([config.distPath, config.viewsDestinationPath]);
 });
 
 gulp.task('CopyViews', function () {
@@ -81,13 +84,13 @@ gulp.task('CacheTemplates', function () {
         .pipe(gulp.dest('./src/scripts/'));
 });
 
-gulp.task('buildAppResources', ['Clean'], function(cb){
-    plugins.sequence(['CopyViews', 'CopyMedia', 'CacheTemplates', 'BuildFonts'], 'AppStyles', 'BuildScripts')(cb);
+gulp.task('buildAppResources', function(cb){
+    plugins.sequence('Clean', ['CopyViews', 'CopyMedia', 'CacheTemplates', 'BuildFonts'], 'AppStyles', 'AppScripts')(cb);
 });
 
-gulp.task('release', ['Clean'], function(cb){
+gulp.task('release', function(cb){
     debug = false;
-    plugins.sequence(['CopyViews', 'CopyMedia', 'CacheTemplates', 'BuildFonts'], 'AppStyles', 'BuildScripts')(cb);
+    plugins.sequence('Clean', ['CopyViews', 'CopyMedia', 'CacheTemplates', 'BuildFonts'], 'AppStyles', 'AppScripts')(cb);
 });
 
 gulp.task('watch', ['buildAppResources'], function() {

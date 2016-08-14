@@ -11,11 +11,13 @@
 
         var clientId = 5130198;
         var apiVersion = '5.37';
+        var audioAccessLevel = 8;
 
         vm.token = null;
         vm.userId = null;
 
         vm.auth = auth;
+        vm.logout = logout;
         vm.getFriendsList = getFriendsList;
         vm.setAccessParams = setAccessParams;
         vm.getAccessToken = getAccessToken;
@@ -63,8 +65,20 @@
                     /* Пользователь нажал кнопку Отмена в окне авторизации */
                     deferred.reject();
                 }
-            });
+            }, audioAccessLevel);
 
+            return deferred.promise;
+        }
+
+        function logout(){
+            var deferred = $q.defer();
+            VK.Auth.logout(function(response) {
+                if (response) {
+                    deferred.resolve();
+                } else {
+                    deferred.reject();
+                }
+            });
             return deferred.promise;
         }
 
@@ -88,11 +102,12 @@
             return callApi('friends.get', params);
         }
 
-        function searchAudio(pattern, paging){
+        function searchAudio(pattern, byArtist, paging){
             var params = angular.extend(getParamsWithPaging(paging), {
                 q: pattern,
+                performer_only: byArtist ? 1 : 0,
                 auto_complete: 1,
-                sort: 2,
+                sort: 2
             });
 
             return callApi('audio.search', params);

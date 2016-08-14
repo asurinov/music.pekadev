@@ -1,6 +1,8 @@
 @main-color: #337ab7;
 @main-color-hover: lighten(@main-color, 20%);
 
+@border-color: #ddd;
+
 body {
   padding: 80px 50px 60px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -41,9 +43,16 @@ progress[value]::-webkit-progress-bar {
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
   color: white;
 
+  & > .playback-buttons {
+    padding: 0;
+  }
+
   .track-info {
     margin: 0 auto;
     vertical-align: middle;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 
     font-size: 24px;
   }
@@ -71,40 +80,63 @@ progress[value]::-webkit-progress-bar {
   border-radius: 3px;
 }
 
-.pekadev-audio-grid {
-  border: 1px solid #ddd;
-
+.audio-grid {
   @media screen and (max-width: 768px) {
-    tr {
-      height: 60px;
-      td {
-        .glyphicon {
-          font-size: 30px;
-        }
+    .row {
+      &.audio-grid-track > div {
+        height: 60px;
+        line-height: 60px;
+      }
+
+      .glyphicon {
+        font-size: 30px;
       }
     }
   }
 
-  tr {
+  .row {
 
-    th, td {
+    &.audio-grid-header > div {
+      padding: 5px 0;
+    }
+
+    &.audio-grid-track > div {
+      height: 40px;
+      line-height: 40px;
       vertical-align: middle !important;
+      padding-left: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
-    th {
-      text-align: center;
-    }
+    border-top: 1px solid @border-color;
+    border-left: 1px solid @border-color;
+    border-right: 1px solid @border-color;
 
-    td {
-      .glyphicon {
-        font-size: 24px;
-        color: @main-color;
+    margin-bottom: 0;
 
-        &:hover {
-          cursor: pointer;
-          color: @main-color-hover;
-        }
+    .track-artist {
+      text-decoration: underline;
+
+      &:hover {
+        cursor: pointer;
       }
+    }
+
+    .glyphicon {
+      top: 4px;
+      font-size: 24px;
+      color: @main-color;
+
+      &:hover {
+        cursor: pointer;
+        color: @main-color-hover;
+      }
+    }
+
+    &:last-child {
+      border-bottom: 1px solid @border-color;
     }
   }
 }

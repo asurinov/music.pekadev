@@ -17,11 +17,20 @@
         init();
 
         vm.login = login;
+        vm.logout = logout;
+
 
         function login(){
             appService.auth().then(function(){
                 vm.isAuthorized = true;
                 getUserInfo();
+            });
+        }
+
+        function logout(){
+            appService.logout().then(function(){
+                vm.isAuthorized = false;
+                vm.userInfo = null;
             });
         }
 

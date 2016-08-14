@@ -1,7 +1,7 @@
 <div>
     <div class="audio-controls">
         <div class="row">
-            <div class="col-lg-2 col-md-2 col-sm-2">
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-3 playback-buttons">
                 <!--<button type="button" class="btn btn-primary" ng-click="">
                     <span class="fa fa-step-backward"></span>
                 </button>-->
@@ -15,45 +15,49 @@
                     <span class="fa fa-step-forward"></span>
                 </button>-->
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-10">
+            <div class="col-lg-4 col-md-4 col-sm-10 col-xs-9">
                 <div class="track-info" ng-show="record.data">
                     <span ng-bind="record.author"></span>
                     <span>&#8212</span>
                     <span ng-bind="record.title"></span>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                 <label for="progress-control">Прогресс</label>
                 <progress id="progress-control" class="progress-control" min="0" max="1" ng-value="record.progress"></progress>
             </div>
-            <div class="col-lg-2 col-md-2 col-sm-12">
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                 <label for="volume-control">Громкость</label>
                 <input id="volume-control" type=range min=0 max=1 step=0.01 ng-model="volume"/>
             </div>
         </div>
     </div>
-    <div class="row pekadev-audio-grid">
-        <table class="table table-bordered table-condensed">
-            <tr>
-                <th></th>
-                <th>Исполнитель</th>
-                <th>Название</th>
-                <th>Длительность</th>
-                <th>Ссылка</th>
-            </tr>
-            <tr ng-repeat="audio in tracks">
-                <td class="text-center">
-                    <span class="glyphicon glyphicon-play" ng-show="record.id !== audio.id || !audio.playing" ng-click="tgc.play(audio, $index)"></span>
-                    <span class="glyphicon glyphicon-pause" ng-show="record.id === audio.id && audio.playing" ng-click="tgc.pause(audio)"></span>
-                </td>
-                <td ng-bind="audio.artist"></td>
-                <td ng-bind="audio.title"></td>
-                <td class="text-center" ng-bind="audio.duration"></td>
-                <td class="text-center track-actions">
-                    <a ng-href="{{audio.url}}" download=""><i class="glyphicon glyphicon-download"></i></a>
-                    <span class="glyphicon glyphicon-share" ng-click="tgc.copyLink(audio)"></span>
-                </td>
-            </tr>
-        </table>
+    <div class="audio-grid">
+        <div class="row audio-grid-header">
+            <div class="col-md-1 col-sm-1 col-xs-1"></div>
+            <div class="col-md-4 col-sm-4 col-xs-4 text-left">Исполнитель</div>
+            <div class="col-md-5 col-sm-6 col-xs-6 text-left">Название</div>
+            <div class="col-md-1 hidden-sm hidden-xs text-center">Длительность</div>
+            <div class="col-md-1 col-sm-1 col-xs-1 text-center">Ссылка</div>
+        </div>
+        <div class="row audio-grid-track" ng-repeat="audio in tracks">
+            <div class="col-md-1 col-sm-1 col-xs-1 text-center">
+                <span class="glyphicon glyphicon-play" ng-show="record.id !== audio.id || !audio.playing" ng-click="tgc.play(audio, $index)"></span>
+                <span class="glyphicon glyphicon-pause" ng-show="record.id === audio.id && audio.playing" ng-click="tgc.pause(audio)"></span>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-4 text-left">
+                <span class="track-artist" ng-bind="audio.artist" ng-click="tgc.searchByArtist(audio.artist)"></span>
+            </div>
+            <div class="col-md-5 col-sm-6 col-xs-6 text-left">
+                <span ng-bind="audio.title"></span>
+            </div>
+            <div class="col-md-1 hidden-sm hidden-xs text-center">
+                <span ng-bind="audio.duration | pekaDuration"></span>
+            </div>
+            <div class="col-md-1 col-sm-1 col-xs-1 text-center">
+                <a ng-href="{{audio.url}}" download=""><i class="glyphicon glyphicon-download"></i></a>
+                <span class="glyphicon glyphicon-share" ng-click="tgc.copyLink(audio)"></span>
+            </div>
+        </div>
     </div>
 </div>
