@@ -106,7 +106,7 @@
             var params = angular.extend(getParamsWithPaging(paging), {
                 q: pattern,
                 performer_only: byArtist ? 1 : 0,
-                auto_complete: 1,
+                auto_complete: 0,
                 sort: 2
             });
 

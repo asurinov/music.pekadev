@@ -1,28 +1,28 @@
 <div>
     <div class="audio-controls">
         <div class="row">
-            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-3 playback-buttons">
-                <!--<button type="button" class="btn btn-primary" ng-click="">
+            <div class="col-lg-2 col-md-3 col-sm-3 col-xs-4 playback-buttons">
+                <button type="button" class="btn btn-primary" ng-click="tgc.previousTrack()" ng-disabled="!tracks || tracks.length === 0">
                     <span class="fa fa-step-backward"></span>
-                </button>-->
-                <button type="button" class="btn btn-primary" ng-click="tgc.toggle()" ng-disabled="!tracks">
+                </button>
+                <button type="button" class="btn btn-primary" ng-click="tgc.toggle()" ng-disabled="!tracks || tracks.length === 0">
                     <span class="fa" ng-class="{'fa-play': !record.playing, 'fa-pause': record.playing}"></span>
+                </button>
+                <button class="btn btn-primary" ng-click="tgc.nextTrack()" ng-disabled="!tracks || tracks.length === 0">
+                    <span class="fa fa-step-forward"></span>
                 </button>
                 <button type="button" class="btn btn-primary" ng-class="{'active': repeatMode}" ng-click="repeatMode = !repeatMode">
                     <span class="fa fa-repeat"></span>
                 </button>
-                <!--<button class="btn btn-primary" ng-click="">
-                    <span class="fa fa-step-forward"></span>
-                </button>-->
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-10 col-xs-9">
-                <div class="track-info" ng-show="record.data">
+            <div class="col-lg-4 col-md-4 col-sm-9 col-xs-8 track-info">
+                <div class="marquee" ng-show="record.data">
                     <span ng-bind="record.author"></span>
                     <span>&#8212</span>
                     <span ng-bind="record.title"></span>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12">
                 <label for="progress-control">Прогресс</label>
                 <progress id="progress-control" class="progress-control" min="0" max="1" ng-value="record.progress"></progress>
             </div>
@@ -46,10 +46,10 @@
                 <span class="glyphicon glyphicon-pause" ng-show="record.id === audio.id && audio.playing" ng-click="tgc.pause(audio)"></span>
             </div>
             <div class="col-md-4 col-sm-4 col-xs-4 text-left">
-                <span class="track-artist" ng-bind="audio.artist" ng-click="tgc.searchByArtist(audio.artist)"></span>
+                <span class="track-artist" ng-bind="audio.artist" title="{{audio.artist}}" ng-click="tgc.searchByArtist(audio.artist)"></span>
             </div>
             <div class="col-md-5 col-sm-6 col-xs-6 text-left">
-                <span ng-bind="audio.title"></span>
+                <span ng-bind="audio.title" title="{{audio.title}}"></span>
             </div>
             <div class="col-md-1 hidden-sm hidden-xs text-center">
                 <span ng-bind="audio.duration | pekaDuration"></span>

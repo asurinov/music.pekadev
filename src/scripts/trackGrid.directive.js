@@ -24,6 +24,10 @@
             vm.pause = pause;
             vm.toggle = toggle;
 
+            vm.canPlay = canPlay;
+            vm.nextTrack = nextTrack;
+            vm.previousTrack = previousTrack;
+
             vm.searchByArtist = searchByArtist;
 
             $scope.seekRecord = function(newVal){
@@ -102,13 +106,24 @@
                     if($scope.record.playing){
                         pause();
                     } else {
-                        play($scope.record.data || $scope.tracks[index], index)
+                        play($scope.record.data || $scope.tracks[$scope.record.index], $scope.record.index)
                     }
                 }
             }
 
             function canPlay(){
                 return $scope.tracks && $scope.tracks.length > 0;
+            }
+
+            function nextTrack(){
+                $scope.record.index = ++$scope.record.index % $scope.tracks.length;
+                loadRecord($scope.record.index);
+            }
+
+            function previousTrack(){
+                var currentIndex = $scope.record.index;
+                $scope.record.index = --currentIndex < 0 ? $scope.tracks.length + currentIndex : currentIndex;
+                loadRecord($scope.record.index);
             }
 
             function updateProgress(){
