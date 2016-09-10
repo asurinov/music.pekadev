@@ -14,26 +14,22 @@
 </head>
 <body ng-controller="appController as apc">
 <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header hidden-xs">
-            <a class="navbar-brand" ui-sref="main">VkMusicPekadev</a>
-        </div>
-        <ul class="nav navbar-nav">
-            <li><a ui-sref="playlists">Playlists</a></li>
-        </ul>
+    <div class="container-fluid">
+        <button class="btn btn-primary navbar-btn" ui-sref="main"><i class="fa fa-home"></i></button></li>
+        <button class="btn btn-primary navbar-btn" ui-sref="playlists">Плейлисты</button></li>
         <button class="btn btn-primary navbar-btn" ng-hide="apc.isAuthorized" ng-click="apc.login()">
             <i class="fa fa-vk"></i>
             <span>Войти</span>
         </button>
-        <form class="navbar-form navbar-right" ng-if="apc.isAuthorized">
+        <span ng-if="apc.isAuthorized" class="pull-right">
             <img class="img-circle hidden-xs" ng-src="{{apc.userInfo.photo_50}}" alt="">
-            <span ng-bind="apc.userInfo.last_name"></span>
-            <span ng-bind="apc.userInfo.first_name"></span>
-            <button class="btn btn-primary" ng-click="apc.logout()">
+            <span class="hidden-xs" ng-bind="apc.userInfo.last_name"></span>
+            <span class="hidden-xs" ng-bind="apc.userInfo.first_name"></span>
+            <button class="btn btn-primary navbar-btn" ng-click="apc.logout()">
                 <i class="fa fa-vk"></i>
                 <span>Выйти</span>
             </button>
-        </form>
+        </span>
     </div>
 </nav>
 <div class="container" ng-if="apc.isAuthorized" ui-view>

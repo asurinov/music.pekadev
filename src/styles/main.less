@@ -14,13 +14,15 @@ body {
 
 @media screen and (max-width: 767px) {
   body {
-    padding-top: 150px;
+    padding-top: 105px;
+    padding-left: 0px;
+    padding-right: 0px;
   }
 }
 
 @media screen and (max-width: 991px) {
   body {
-    padding-bottom: 150px;
+    padding-bottom: 90px;
   }
 }
 
@@ -37,7 +39,7 @@ progress[value]::-webkit-progress-bar {
   width: 100%;
   z-index: 3;
 
-  padding: 10px 40px 0 40px;
+  padding: 10px 10px 0 40px;
 
   background-color: rgba(0,0,0,0.5);
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
@@ -55,7 +57,7 @@ progress[value]::-webkit-progress-bar {
     & > .marquee {
       position: absolute;
       width: 100%;
-      heigth: 100%;
+      height: 100%;
 
       vertical-align: middle;
       white-space: nowrap;
@@ -95,6 +97,15 @@ progress[value]::-webkit-progress-bar {
   }
 }
 
+@media screen and (max-width: 380px) {
+  .audio-controls {
+    padding-left: 5px;
+
+    .playback-buttons {
+      padding-right: 0;
+    }
+  }
+}
 
 .progress-control {
   width: 100%;
@@ -135,16 +146,46 @@ progress[value]::-webkit-progress-bar {
 
     &.audio-grid-header > div {
       padding: 5px 0;
+
+      .fa:hover {
+        cursor: auto;
+      }
     }
 
-    &.audio-grid-track > div {
-      height: 40px;
-      line-height: 40px;
-      vertical-align: middle !important;
-      padding-left: 0;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+    .fa {
+      top: 4px;
+      font-size: 20px;
+      color: @main-color;
+
+      &:hover {
+        cursor: pointer;
+        color: @main-color-hover;
+      }
+    }
+
+    &.audio-grid-track {
+      & > div {
+        height: 40px;
+        line-height: 40px;
+        vertical-align: middle !important;
+        padding-left: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+
+    &.audio-grid-track.playing {
+      background-color: @main-color;
+      color: white;
+
+      .fa {
+        color: white;
+
+        &:hover {
+          color: #bbbbbb;
+        }
+      }
     }
 
     border-top: 1px solid @border-color;
@@ -161,17 +202,6 @@ progress[value]::-webkit-progress-bar {
       }
     }
 
-    .glyphicon {
-      top: 4px;
-      font-size: 24px;
-      color: @main-color;
-
-      &:hover {
-        cursor: pointer;
-        color: @main-color-hover;
-      }
-    }
-
     &:last-child {
       border-bottom: 1px solid @border-color;
     }
@@ -179,12 +209,11 @@ progress[value]::-webkit-progress-bar {
 }
 
 .pekadev-playlists {
-  .glyphicon {
-    color: @main-color;
-    font-size: 24px;
+  .fa {
+    color: white;
+    font-size: 20px;
 
     &:hover {
-      color: @main-color-hover;
       cursor: pointer;
     }
   }
@@ -204,4 +233,8 @@ table {
   th {
     position: relative;
   }
+}
+
+.pagination {
+  margin: 0;
 }

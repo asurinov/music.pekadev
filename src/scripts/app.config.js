@@ -39,9 +39,9 @@
                     templateUrl: '/partials/playlist.view.html',
                     controller: 'playlistController'
                 })
-                .state('track.element', {
+                .state('track', {
                     url: "/track/:trackId",
-                    templateUrl: '/partials/tracks.view.html',
+                    templateUrl: '/partials/playlist.view.html',
                     controller: 'tracksController',
                     controllerAs: 'trc'
                 });

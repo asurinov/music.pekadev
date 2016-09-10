@@ -1,7 +1,7 @@
 <div class="row pekadev-playlists">
     <h3 class="text-center">Плейлисты</h3>
     <div class="row">
-        <span class="glyphicon glyphicon-plus-sign" ui-sref="playlists.new"></span>
+        <span class="fa fa-plus" ui-sref="playlists.new"></span>
     </div>
     <div class="row">
         <a ng-repeat="album in albums" href="#" ui-sref="playlists.element({listId: album.id})" class="btn btn-primary" role="button">{{album.title}}</a>

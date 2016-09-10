@@ -14,7 +14,7 @@
             switch($state.current.name){
                 case 'playlists.element':
                     getAlbumTracks($state.params.listId);
-                break;
+                    break;
                 case 'playlists.new':
                     createAlbum().finally(function(){
                         $state.go('playlists');
@@ -22,7 +22,7 @@
                     break;
                 default:
                     getAlbums();
-                break;
+                    break;
             }
         }
 

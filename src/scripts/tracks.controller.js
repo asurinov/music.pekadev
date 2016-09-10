@@ -40,7 +40,6 @@
         }
 
         vm.loadGrid = loadGrid;
-        vm.copyLink = copyLink;
 
         $scope.getFriendsList = getFriendsList;
         $scope.getAudioList = getAudioList;
@@ -153,11 +152,6 @@
                 maxSize: 10,
                 itemsPerPage: 30
             };
-        }
-
-        function copyLink(record){
-            var link = appService.getTrackLink(record);
-            //window.clipboardData.setData('text/uri-list', link);
         }
 
         function checkPaging(audioType, forceResetPaging){
