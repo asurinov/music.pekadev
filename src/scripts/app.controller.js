@@ -41,12 +41,9 @@
         }
 
         function init() {
-            VK.Auth.getLoginStatus(function(res){
-                if (res.session) {
-                    vm.isAuthorized = true;
-                    appService.setAccessParams('', res.session.mid);
-                    getUserInfo();
-                }
+            appService.getLoginStatus().then(function(){
+                vm.isAuthorized = true;
+                getUserInfo();
             });
         }
     }

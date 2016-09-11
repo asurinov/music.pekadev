@@ -13,13 +13,13 @@
         var apiVersion = '5.37';
         var audioAccessLevel = 8;
 
-        vm.token = null;
         vm.userId = null;
 
         vm.auth = auth;
         vm.logout = logout;
         vm.getFriendsList = getFriendsList;
         vm.setAccessParams = setAccessParams;
+        vm.getLoginStatus = getLoginStatus;
         vm.getAccessToken = getAccessToken;
         vm.getUserId = getUserId;
         vm.getAudioList = getAudioList;
@@ -38,9 +38,9 @@
             return callApi('audio.addAlbum', { title: name});
         }
 
-        function setAccessParams(token, userId){
-            vm.token = token;
-            vm.userId = userId;
+        function setAccessParams(session){
+            vm.userId = session.mid;
+            vm.expire = session.expire;
         }
 
         function getAccessToken(){
@@ -143,16 +143,20 @@
         }
 
         function callApi(method, params){
-            var deferred = $q.defer();
+            var promise = $q.when(isSessionExpires() ? getLoginStatus() : true);
 
-            VK.Api.call(method, params, function(r) {
-                if(r.response) {
-                    deferred.resolve(r.response);
-                } else {
-                    deferred.reject();
-                }
+            return promise.then(function(){
+                var deferred = $q.defer();
+
+                VK.Api.call(method, params, function(r) {
+                    if(r.response) {
+                        deferred.resolve(r.response);
+                    } else {
+                        deferred.reject();
+                    }
+                });
+                return deferred.promise;
             });
-            return deferred.promise;
         }
 
         function getTrackLink(record){
@@ -173,9 +177,25 @@
 
         function getBaseParam(){
             return {
-                access_token: vm.token,
                 v: apiVersion
             };
+        }
+
+        function isSessionExpires(){
+            return vm.expire < new Date().getTime() / 1000;
+        }
+
+        function getLoginStatus(){
+            return $q(function(resolve, reject){
+                VK.Auth.getLoginStatus(function(res){
+                    if (res.session) {
+                        setAccessParams(res.session);
+                        resolve();
+                    } else {
+                        reject();
+                    }
+                });
+            });
         }
     }
 })();
