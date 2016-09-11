@@ -6,9 +6,9 @@
         .module('app')
         .controller('tracksController', tracksController);
 
-    tracksController['$inject'] = ['$scope', 'appService', 'stringService', '$stateParams'];
+    tracksController['$inject'] = ['$scope', '$rootScope', 'appService', 'stringService', '$state', '$stateParams'];
 
-    function tracksController($scope, appService, stringService, $stateParams){
+    function tracksController($scope, $rootScope, appService, stringService, $state, $stateParams){
 
         var vm = this;
 
@@ -30,14 +30,29 @@
             $scope.audioSearch(true);
         });
 
-        init();
-
-        function init(){
-            if($stateParams.trackId){
-                getAudioById($stateParams.trackId);
+        $scope.$watch('currentState', function(newVal, oldVal){
+            switch(newVal){
+                case 'main.recommended':
+                    getRecommendationsByUser();
+                    break;
+                case 'main.popular':
+                    getPopularList();
+                    break;
+                case 'main.my':
+                    getAudioList();
+                    break;
+                case 'main.search':
+                    break;
+                case 'track':
+                    if($stateParams.trackId){
+                        getAudioById($stateParams.trackId);
+                    }
+                    resetPaging();
+                    break;
+                default:
+                    break;
             }
-            resetPaging();
-        }
+        });
 
         vm.loadGrid = loadGrid;
 
@@ -46,6 +61,7 @@
         $scope.getPopularList = getPopularList;
         $scope.audioSearch = audioSearch;
         $scope.getRecommendationsByUser = getRecommendationsByUser;
+        $scope.goToAudioSearch = goToAudioSearch;
 
         $scope.$on('$destroy', function(){
             if($scope.player){
@@ -79,6 +95,10 @@
             appService.getFriendsList().then(function(res){
                 $scope.friends = res;
             });
+        }
+
+        function goToAudioSearch(resetPaging){
+            $state.go('main.search', {query: vm.pattern, byArtist: vm.byArtist, page: vm.paging.currentPage, reset: resetPaging});
         }
 
         function audioSearch(resetPaging){
