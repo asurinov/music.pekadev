@@ -23,6 +23,30 @@
                     controller: 'tracksController',
                     controllerAs: 'trc'
                 })
+                .state('main.recommended', {
+                    url: "recommended",
+                    templateUrl: "/partials/main.view.html",
+                    controller: 'tracksController',
+                    controllerAs: 'trc'
+                })
+                .state('main.popular', {
+                    url: "popular",
+                    templateUrl: "/partials/main.view.html",
+                    controller: 'tracksController',
+                    controllerAs: 'trc'
+                })
+                .state('main.my', {
+                    url: "my",
+                    templateUrl: "/partials/main.view.html",
+                    controller: 'tracksController',
+                    controllerAs: 'trc'
+                })
+                .state('main.search', {
+                    url: "search?query&byArtist&page",
+                    templateUrl: "/partials/main.view.html",
+                    controller: 'tracksController',
+                    controllerAs: 'trc'
+                })
                 .state('playlists', {
                     url: "/playlists",
                     templateUrl: "/partials/playlists.view.html",
@@ -46,4 +70,10 @@
                     controllerAs: 'trc'
                 });
         }]);
+
+    angular.module('app').run(['$rootScope', function($rootScope){
+        $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+            $rootScope.currentState = toState.name;
+        });
+    }]);
 })();

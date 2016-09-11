@@ -2,15 +2,15 @@
     <div class="row">
         <div class="col-md-6 col-xs-12">
             <div class="row">
-                <button type="button" class="btn btn-primary" ng-click="getAudioList()">
+                <button type="button" class="btn btn-primary" ui-sref="main.my">
                     <span class="glyphicon glyphicon-ok-sign"></span>
                     Мои аудиозаписи
                 </button>
-                <button class="btn btn-primary" ng-click="getRecommendationsByUser()">
+                <button class="btn btn-primary" ui-sref="main.recommended">
                     <span class="glyphicon glyphicon-question-sign"></span>
                     Мои рекомендации
                 </button>
-                <button class="btn btn-primary" ng-click="getPopularList()">
+                <button class="btn btn-primary" ui-sref="main.popular">
                     <span class="glyphicon glyphicon-warning-sign"></span>
                     Популярное
                 </button>
@@ -23,9 +23,9 @@
                         </label>
                         <input type="checkbox" aria-label="..." ng-model="trc.byArtist">
                     </span>
-                    <input type="text" class="form-control" placeholder="Поиск аудиозаписей" ng-model="trc.pattern" on-enter="audioSearch(true)">
+                    <input type="text" class="form-control" placeholder="Поиск аудиозаписей" ng-model="trc.pattern" on-enter="goToAudioSearch(true)">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" ng-click="audioSearch(true)" ng-disabled="!trc.pattern">
+                        <button class="btn btn-default" type="button" ng-click="goToAudioSearch(true)" ng-disabled="!trc.pattern">
                             <i class="fa fa-search"></i>
                         </button>
                     </span>
