@@ -10,7 +10,7 @@
         var vm = this;
 
         var clientId = 5130198;
-        var apiVersion = '5.37';
+        var apiVersion = '5.53';
         var audioAccessLevel = 8;
 
         vm.userId = null;
@@ -127,8 +127,8 @@
             return callApi('audio.getById', params);
         }
 
-        function getPopularList(){
-            var params = getBaseParam();
+        function getPopularList(paging){
+            var params = getParamsWithPaging(paging);
             return callApi('audio.getPopular', params);
         }
 

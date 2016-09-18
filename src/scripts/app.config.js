@@ -23,26 +23,26 @@
                     controller: 'tracksController',
                     controllerAs: 'trc'
                 })
-                .state('main.recommended', {
-                    url: "recommended",
+                .state('recommended', {
+                    url: "/recommended/:page",
                     templateUrl: "/partials/main.view.html",
                     controller: 'tracksController',
                     controllerAs: 'trc'
                 })
-                .state('main.popular', {
-                    url: "popular",
+                .state('popular', {
+                    url: "/popular",
                     templateUrl: "/partials/main.view.html",
                     controller: 'tracksController',
                     controllerAs: 'trc'
                 })
-                .state('main.my', {
-                    url: "my",
+                .state('mytracks', {
+                    url: "/mytracks/:page",
                     templateUrl: "/partials/main.view.html",
                     controller: 'tracksController',
                     controllerAs: 'trc'
                 })
-                .state('main.search', {
-                    url: "search?query&byArtist&page",
+                .state('search', {
+                    url: "/search?query&artist&page",
                     templateUrl: "/partials/main.view.html",
                     controller: 'tracksController',
                     controllerAs: 'trc'

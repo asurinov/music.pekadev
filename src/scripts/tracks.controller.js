@@ -9,39 +9,64 @@
     tracksController['$inject'] = ['$scope', '$rootScope', 'appService', 'stringService', '$state', '$stateParams'];
 
     function tracksController($scope, $rootScope, appService, stringService, $state, $stateParams){
-
         var vm = this;
 
+        var itemsPerPage = 50;
+
         var trackType = {
-            my: 'mytracks',
+            myTracks: 'mytracks',
             popular: 'popular',
             search: 'search',
             recommendationByUser: 'recommendationByUser',
             recommendationByTrack: 'recommendationByUser'
         };
 
-        vm.paging = null;
+        vm.paging = {
+            itemsPerPage: itemsPerPage,
+            totalItems: 0,
+            totalPages: 0,
+            currentPage: 1,
+            maxSize: 10
+        };
+
         vm.dataType = null;
         vm.byArtist = false;
+
+        $scope.goToAudioSearch = goToAudioSearch;
+        $scope.onPageChanged = onPageChanged;
+
+        $scope.goToMyTracks = goToMyTracks;
+        $scope.goToPopular = goToPopular;
+        $scope.goToRecommended = goToRecommended;
 
         $scope.$on('searchByArtist', function (event, data) {
             vm.pattern = data;
             vm.byArtist = true;
-            $scope.audioSearch(true);
+            goToAudioSearch(true);
         });
 
         $scope.$watch('currentState', function(newVal, oldVal){
             switch(newVal){
-                case 'main.recommended':
+                case 'recommended':
+                    vm.dataType = trackType.recommendationByUser;
+                    vm.paging.currentPage = parseInt($stateParams.page, 10) || 1;
                     getRecommendationsByUser();
                     break;
-                case 'main.popular':
+                case 'popular':
+                    vm.dataType = trackType.myTracks;
                     getPopularList();
                     break;
-                case 'main.my':
+                case 'mytracks':
+                    vm.dataType = trackType.popular;
+                    vm.paging.currentPage = parseInt($stateParams.page, 10) || 1;
                     getAudioList();
                     break;
-                case 'main.search':
+                case 'search':
+                    vm.dataType = trackType.search;
+                    vm.pattern = $stateParams.query;
+                    vm.byArtist = $stateParams.artist === "true" || false;
+                    vm.paging.currentPage = parseInt($stateParams.page, 10) || 1;
+                    audioSearch();
                     break;
                 case 'track':
                     if($stateParams.trackId){
@@ -54,37 +79,31 @@
             }
         });
 
-        vm.loadGrid = loadGrid;
-
-        $scope.getFriendsList = getFriendsList;
-        $scope.getAudioList = getAudioList;
-        $scope.getPopularList = getPopularList;
-        $scope.audioSearch = audioSearch;
-        $scope.getRecommendationsByUser = getRecommendationsByUser;
-        $scope.goToAudioSearch = goToAudioSearch;
-
         $scope.$on('$destroy', function(){
             if($scope.player){
                 $scope.player.stop();
             }
         });
 
-        function loadGrid(){
-            switch(vm.dataType){
-                case trackType.popular:
-                    getPopularList();
+        function onPageChanged(){
+            switch($rootScope.currentState){
+                case 'recommended':
+                    goToRecommended();
                     break;
-                case trackType.search:
-                    audioSearch();
+                case 'popular':
+                    goToPopular();
                     break;
-                case trackType.my:
-                    getAudioList();
+                case 'mytracks':
+                    goToMyTracks();
                     break;
-                case trackType.recommendationByUser:
-                    getRecommendationsByUser();
+                case 'search':
+                    goToAudioSearch(false);
                     break;
-                case trackType.recommendationByTrack:
-                    getRecommendationsByTrack();
+                case 'track':
+                    if($stateParams.trackId){
+                        getAudioById($stateParams.trackId);
+                    }
+                    resetPaging();
                     break;
                 default:
                     break;
@@ -97,13 +116,31 @@
             });
         }
 
-        function goToAudioSearch(resetPaging){
-            $state.go('main.search', {query: vm.pattern, byArtist: vm.byArtist, page: vm.paging.currentPage, reset: resetPaging});
+        function goToAudioSearch(newSearch){
+            if(newSearch){
+                resetPaging();
+            }
+
+            checkPaging(trackType.search);
+            $state.go('search', { query: vm.pattern, artist: vm.byArtist, page: getCurrentPage() });
         }
 
-        function audioSearch(resetPaging){
-            checkPaging(trackType.search, resetPaging);
+        function goToPopular(){
+            checkPaging(trackType.popular);
+            $state.go('popular');
+        }
 
+        function goToRecommended(){
+            checkPaging(trackType.recommendationByUser)
+            $state.go('recommended', { page: getCurrentPage() });
+        }
+
+        function goToMyTracks(){
+            checkPaging(trackType.myTracks);
+            $state.go('mytracks', { page: getCurrentPage() });
+        }
+
+        function audioSearch(){
             appService.searchAudio(vm.pattern, vm.byArtist, vm.paging).then(function(res){
                 recalculatePaging(vm.paging, res.count);
                 vm.paging.totalItems = res.count;
@@ -112,8 +149,6 @@
         }
 
         function getAudioList(){
-            checkPaging(trackType.my)
-
             appService.getAudioList(vm.paging).then(function(res){
                 recalculatePaging(vm.paging, res.count);
                 $scope.audios = res.items;
@@ -128,9 +163,7 @@
         }
 
         function getPopularList(){
-            checkPaging(trackType.popular);
-
-            appService.getPopularList().then(function(res){
+            appService.getPopularList(vm.paging).then(function(res){
                 vm.paging.totalItems = res.length;
                 vm.paging.itemsPerPage = res.length;
                 vm.paging.totalPages = 1;
@@ -141,12 +174,10 @@
         }
 
         function getRecommendationsByUser(){
-            checkPaging(trackType.recommendationByUser);
             getRecommendationsList(appService.getUserId())
         }
 
         function getRecommendationsByTrack(){
-            checkPaging(trackType.recommendationByTrack);
             getRecommendationsList();
         }
 
@@ -170,14 +201,18 @@
                 totalPages: 0,
                 currentPage: 1,
                 maxSize: 10,
-                itemsPerPage: 30
+                itemsPerPage: itemsPerPage
             };
         }
 
-        function checkPaging(audioType, forceResetPaging){
-            if (vm.dataType !== audioType || forceResetPaging) {
-                vm.dataType = audioType;
-                resetPaging();
+        function getCurrentPage(){
+            return vm.paging.currentPage;
+        }
+
+        function checkPaging(type){
+            if(vm.dataType !== type){
+                vm.dataType = type;
+                vm.paging.currentPage = 1;
             }
         }
     }

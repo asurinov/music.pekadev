@@ -2,15 +2,15 @@
     <div class="row">
         <div class="col-md-6 col-xs-12">
             <div class="row">
-                <button type="button" class="btn btn-primary" ui-sref="main.my">
+                <button type="button" class="btn btn-primary" ng-click="goToMyTracks()">
                     <span class="glyphicon glyphicon-ok-sign"></span>
                     Мои аудиозаписи
                 </button>
-                <button class="btn btn-primary" ui-sref="main.recommended">
+                <button class="btn btn-primary" ng-click="goToRecommended()">
                     <span class="glyphicon glyphicon-question-sign"></span>
                     Мои рекомендации
                 </button>
-                <button class="btn btn-primary" ui-sref="main.popular">
+                <button class="btn btn-primary" ng-click="goToPopular()">
                     <span class="glyphicon glyphicon-warning-sign"></span>
                     Популярное
                 </button>
@@ -33,14 +33,16 @@
             </div>
         </div>
     </div>
-     <ul uib-pagination class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
-        ng-model="trc.paging.currentPage"
-        ng-change="trc.loadGrid()"
-        total-items="trc.paging.totalItems"
-        items-per-page="trc.paging.itemsPerPage"
-        max-size="trc.paging.maxSize"
-        boundary-links="true">
-    </ul>
+    <div ng-if="trc.paging.totalItems > trc.paging.itemsPerPage">
+        <ul uib-pagination class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+            ng-model="trc.paging.currentPage"
+            ng-change="onPageChanged()"
+            total-items="trc.paging.totalItems"
+            items-per-page="trc.paging.itemsPerPage"
+            max-size="trc.paging.maxSize"
+            boundary-links="true">
+        </ul>
+    </div>
     <div class="row">
         <span class="pull-left" ng-bind="trc.paging.totalPagesCaption"></span>
         <span class="pull-right" ng-bind="trc.paging.totalItemsCaption"></span>
