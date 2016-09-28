@@ -11,7 +11,7 @@
                 <button class="btn btn-sm btn-primary" ng-click="tgc.nextTrack()" ng-disabled="!tracks || tracks.length === 0">
                     <span class="fa fa-step-forward"></span>
                 </button>
-                <button class="btn btn-sm btn-primary" ng-class="{'active': repeatMode}" ng-click="repeatMode = !repeatMode">
+                <button class="btn btn-sm btn-primary" ng-class="{'active': repeatMode}" ng-click="tgc.toggleRepeatMode()">
                     <span class="fa fa-repeat"></span>
                 </button>
             </div>

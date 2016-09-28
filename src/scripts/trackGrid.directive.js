@@ -4,10 +4,10 @@
     trackGridDirective.$inject = [];
 
     function trackGridDirective(){
-        function controller($scope){
+        function controller($scope, audioService){
             var vm = this;
-            $scope.volume = 0.5;
-            $scope.repeatMode = false;
+            $scope.volume = audioService.getVolume();
+            $scope.repeatMode = audioService.getRepeatMode();
 
             $scope.record = {
                 id: null,
@@ -23,6 +23,7 @@
             vm.play = play;
             vm.pause = pause;
             vm.toggle = toggle;
+            vm.toggleRepeatMode = toggleRepeatMode;
 
             vm.canPlay = canPlay;
             vm.nextTrack = nextTrack;
@@ -31,34 +32,37 @@
             vm.searchByArtist = searchByArtist;
 
             $scope.seekRecord = function(newVal){
-                if($scope.player){
-                    $scope.player.pause();
-                    $scope.player.seek(newVal *  $scope.player.duration());
-                    $scope.player.play();
-                }
+                audioService.seekRecord(newVal);
             }
 
             $scope.$watch('volume', function(newVal){
-                Howler.volume(newVal);
+                audioService.setVolume(newVal);
             });
+
+            function toggleRepeatMode(){
+                $scope.repeatMode = !$scope.repeatMode;
+                audioService.setRepeatMode($scope.repeatMode);
+            }
 
             function loadRecord(index){
                 var trackIndex = index % $scope.tracks.length;
 
                 var record = $scope.tracks[trackIndex];
                 if(record) {
-                    if($scope.player){
-                        $scope.player.stop();
-                        $scope.player.unload();
+                    var player = audioService.getPlayer();
+
+                    if(player){
+                        player.stop();
+                        player.unload();
                         $scope.record.playing = false;
                     }
 
-                    $scope.player = new Howl({src: [record.url], html5: true});
+                    player = audioService.loadRecords([record.url]);
 
-                    $scope.player.on('load', function () {
-                        $scope.player.play();
+                    player.on('load', function () {
+                        player.play();
                         $scope.record = {
-                            duration: Math.round($scope.player.duration()),
+                            duration: Math.round(player.duration()),
                             id: record.id,
                             author: record.artist,
                             title: record.title,
@@ -69,14 +73,14 @@
                         record.playing = true;
                     });
 
-                    $scope.player.on('play', function () {
+                    player.on('play', function () {
                         // Start upating the progress of the track.
                         requestAnimationFrame(updateProgress);
                     });
 
-                    $scope.player.on('end', function () {
+                    player.on('end', function () {
                         if($scope.repeatMode){
-                            $scope.player.play();
+                            player.play();
                         } else {
                             loadRecord(++trackIndex);
                         }
@@ -88,7 +92,7 @@
                 if($scope.record.id !== record.id){
                     loadRecord(index);
                 }else {
-                    $scope.player.play();
+                    audioService.play();
                 }
 
                 $scope.record.playing = true;
@@ -96,7 +100,7 @@
             }
 
             function pause(){
-                $scope.player.pause();
+                audioService.pause();
                 $scope.record.playing = false;
                 $scope.record.data.playing = false;
             }
@@ -127,25 +131,19 @@
             }
 
             function updateProgress(){
+                var player = audioService.getPlayer();
+
                 $scope.$apply(function(){
-                    $scope.record.progress = (($scope.player.seek() || 0) / $scope.record.duration).toFixed(2);
+                    $scope.record.progress = ((player.seek() || 0) / $scope.record.duration).toFixed(2);
                 });
                 // If the sound is still playing, continue stepping.
-                if ($scope.player.playing()) {
+                if (player.playing()) {
                     requestAnimationFrame(updateProgress);
                 }
             }
 
             function searchByArtist(artist){
-                resetPlayer();
                 $scope.$emit('searchByArtist', artist);
-            }
-
-            function resetPlayer(){
-                if($scope.player){
-                    $scope.player.stop();
-                    $scope.player.unload();
-                }
             }
         }
 
@@ -168,7 +166,7 @@
             scope: {
                 tracks: '='
             },
-            controller: ['$scope', controller],
+            controller: ['$scope', 'audioService', controller],
             controllerAs: 'tgc',
             link: link
         }

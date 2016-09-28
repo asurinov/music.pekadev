@@ -6,24 +6,60 @@
     function audioService(){
 
         var vm = this;
+
+        vm.volume = 0.5;
+        vm.repeatMode = false;
+
         vm.play = play;
         vm.pause = pause;
 
-        function play(record, index){
-            if($scope.record.id !== record.id){
-                loadRecord(index);
-            }else {
-                $scope.player.play();
-            }
+        vm.setVolume = setVolume;
+        vm.getVolume = getVolume;
+        vm.setRepeatMode = setRepeatMode;
+        vm.getRepeatMode = getRepeatMode;
+        vm.getPlayer = getPlayer;
+        vm.loadRecords = loadRecords;
+        vm.seekRecord = seekRecord;
 
-            $scope.record.playing = true;
-            record.playing = true;
+        function setRepeatMode(val){
+            vm.repeatMode = val;
+        }
+
+        function getRepeatMode(){
+            return vm.repeatMode;
+        }
+
+        function getPlayer(){
+            return vm.player;
+        }
+
+        function loadRecords(urls){
+            vm.player = new Howl({src: urls, html5: true});
+            return vm.player;
+        }
+
+        function seekRecord(val){
+            if(vm.player){
+                vm.player.pause();
+                vm.player.seek(val *  vm.player.duration());
+                vm.player.play();
+            }
+        }
+
+        function setVolume(val){
+            Howler.volume(val);
+        }
+
+        function getVolume(){
+            return Howler.volume();
+        }
+
+        function play(){
+            vm.player.play();
         }
 
         function pause(){
-            $scope.player.pause();
-            $scope.record.playing = false;
-            $scope.record.data.playing = false;
+            vm.player.pause();
         }
     }
 })();
