@@ -18,7 +18,8 @@
     "angular-bootstrap": "^2.0.1",
     "angular-ui-router": "ui-router#^0.2.18",
     "howler.js": "howler#^2.0.0",
-    "font-awesome": "^4.6.3"
+    "font-awesome": "^4.6.3",
+    "angular-local-storage": "^0.5.2"
   },
   "overrides": {
     "bootstrap": {
@@ -30,7 +31,9 @@
       "main": []
     },
     "font-awesome": {
-      "main": ["./css/font-awesome.min.css"]
+      "main": [
+        "./css/font-awesome.min.css"
+      ]
     }
   },
   "devDependencies": {

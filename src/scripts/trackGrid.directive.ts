@@ -51,8 +51,8 @@ module App {
                 audioService.seekRecord(newVal);
             };
 
-            $scope.$watch('volume', (newVal: number) => {
-                audioService.setVolume(newVal);
+            $scope.$watch('volume', (newVal: string) => {
+                audioService.setVolume(parseFloat(newVal));
             });
         }
 

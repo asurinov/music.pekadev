@@ -3,6 +3,6 @@
 bower_components/
 node_modules/
 public/
-views/
+typings/
 
 templates.js

@@ -1,15 +1,19 @@
 module App {
 
+    import ILocalStorageServiceProvider = angular.local.storage.ILocalStorageServiceProvider;
     class AppConfig {
-        static $inject = ['$locationProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider'];
+        static $inject = ['$locationProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', 'localStorageServiceProvider'];
 
         constructor(
             $locationProvider: ng.ILocationProvider,
             $httpProvider: ng.IHttpProvider,
             $stateProvider: ng.ui.IStateProvider,
-            $urlRouterProvider: ng.ui.IUrlRouterProvider
+            $urlRouterProvider: ng.ui.IUrlRouterProvider,
+            localStorageServiceProvider: ILocalStorageServiceProvider
         ){
             $locationProvider.html5Mode(true);
+            localStorageServiceProvider.setPrefix('peka');
+
             delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
             // For any unmatched url, redirect to /state1

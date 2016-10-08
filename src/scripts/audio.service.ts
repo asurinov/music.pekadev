@@ -1,15 +1,27 @@
 module App {
 
+    import ILocalStorageService = angular.local.storage.ILocalStorageService;
     class AudioService implements IAudioService {
-        static $inject = ['Howl', 'Howler'];
+        static $inject = ['localStorageService', 'Howl', 'Howler'];
+        static VolumeKey: string = 'VOLUME';
 
         repeatMode = false;
         player;
 
         constructor(
+            private localStorageService: ILocalStorageService,
             private Howl,
             private Howler
-        ){}
+        ){
+            const volume = localStorageService.get(AudioService.VolumeKey);
+            if(volume !== null){
+                if(volume <= 1 && volume > 0){
+                    this.Howler.volume(volume);
+                } else {
+                    localStorageService.remove(AudioService.VolumeKey);
+                }
+            }
+        }
 
         setRepeatMode(val: boolean){
             this.repeatMode = val;
@@ -37,6 +49,7 @@ module App {
         }
 
         setVolume(val: number){
+            this.localStorageService.set(AudioService.VolumeKey, val);
             this.Howler.volume(val);
         }
 
