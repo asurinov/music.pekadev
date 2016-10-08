@@ -1,9 +1,9 @@
-(function(){
-    angular.module('app').filter('pekaDuration', function() {
-        return function(input, optional1, optional2) {
+module App {
+    angular.module('app').filter('pekaDuration', () => {
+        return (input) => {
             var output = '';
 
-            var seconds, minutes, hours, days;
+            var hours: number;
 
             var minutes = Math.floor(input / 60);
             var seconds = Math.floor(input % 60);
@@ -28,7 +28,6 @@
             output += seconds;
 
             return output;
-
         };
     });
-})();
+}

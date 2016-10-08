@@ -4,12 +4,13 @@ var series = require('stream-series');
 var bowerSrc = require('main-bower-files');
 var plugins = require('gulp-load-plugins')();
 
+var tsProject = plugins.typescript.createProject('tsconfig.json');
+
 var config = {
     templatesSourcePath: './src/templates/**/*.html',
     mediaSourcePath: './src/media/**/*.*',
-    viewsDestinationPath: './views',
     indexView: 'index.html',
-    appScriptsSourcePath: './src/scripts/**/*.js',
+    appScriptsSourcePath: './src/scripts/**/*.ts',
     appStyleSourcePath: './src/styles/**/*.less',
     distPath: './public',
     scriptsDestinationSubPath: '/scripts',
@@ -53,24 +54,42 @@ gulp.task('VendorsScripts', function(){
 });
 
 gulp.task('AppScripts', ['VendorsScripts'], function () {
-    var app = gulp.src([config.appScriptsSourcePath])
+    var app = tsProject.src([config.appScriptsSourcePath])
+        .pipe(plugins.sourcemaps.init())
+        .pipe(plugins.typescript())
         .pipe(plugins.angularFilesort())
-        .pipe(plugins.if(!debug, plugins.concat('app.js')))
-        .pipe(plugins.if(!debug, plugins.uglify()))
+        .pipe(plugins.concat('app.js'))
+        .pipe(plugins.if(!debug, plugins.uglify({
+            mangle: false,
+            output: {
+                beautify: debug
+            },
+            compress: {
+                hoist_funs: false,
+                hoist_vars: false,
+                conditionals: !debug,
+                sequences: !debug,
+                booleans: !debug,
+                loops: !debug,
+                join_vars: !debug,
+                comparisons: !debug
+            }
+        })))
+        .pipe(plugins.sourcemaps.write())
         .pipe(gulp.dest(config.distPath + config.scriptsDestinationSubPath));
 
-    return gulp.src([config.viewsDestinationPath + '/' + config.indexView])
+    return gulp.src([config.distPath + '/' + config.indexView])
         .pipe(plugins.inject(app, { ignorePath: '/public' }))
-        .pipe(gulp.dest(config.viewsDestinationPath, {overwrite: true}));
+        .pipe(gulp.dest(config.distPath, {overwrite: true}));
 });
 
 gulp.task('Clean', function () {
-    return del([config.distPath, config.viewsDestinationPath]);
+    return del([config.distPath]);
 });
 
 gulp.task('CopyViews', function () {
     return gulp.src([config.templatesSourcePath])
-        .pipe(gulp.dest(config.viewsDestinationPath));
+        .pipe(gulp.dest(config.distPath));
 });
 
 gulp.task('CopyMedia', function () {

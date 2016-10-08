@@ -1,18 +1,11 @@
-/**
- * Created by Machete on 29.12.2015.
- */
-(function(){
-    angular.module('app').service('stringService', stringService);
+module App {
+    class StringService {
+        static $inject = ['stringDictionaries'];
 
-    stringService.$inject = ['stringDictionaries'];
+        constructor(private stringDictionaries){}
 
-    function stringService(stringDictionaries){
-        var vm = this;
-
-        vm.getWordEnding = getWordEnding;
-
-        function getWordEnding(num, dictionaryCode){
-            var dictionary = stringDictionaries[dictionaryCode];
+        getWordEnding(num: number, dictionaryCode: string){
+            var dictionary = this.stringDictionaries[dictionaryCode];
             if(dictionary){
                 var rem = num % 10;
                 var rem100 = num % 100;
@@ -28,4 +21,6 @@
             }
         }
     }
-})();
+
+    angular.module('app').service('stringService', StringService);
+}

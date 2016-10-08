@@ -1,17 +1,16 @@
-/**
- * Created by Machete on 01.11.2015.
- */
-(function(){
-    angular
-        .module('app')
-        .config(['$locationProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider', function ($locationProvider,$httpProvider, $stateProvider, $urlRouterProvider) {
-            $locationProvider.html5Mode(true);
-            $httpProvider.defaults.useXDomain = true;
-            delete $httpProvider.defaults.headers.common['X-Requested-With'];
+module App {
 
-            VK.init({
-                apiId: 5130198
-            });
+    class AppConfig {
+        static $inject = ['$locationProvider', '$httpProvider', '$stateProvider', '$urlRouterProvider'];
+
+        constructor(
+            $locationProvider: ng.ILocationProvider,
+            $httpProvider: ng.IHttpProvider,
+            $stateProvider: ng.ui.IStateProvider,
+            $urlRouterProvider: ng.ui.IUrlRouterProvider
+        ){
+            $locationProvider.html5Mode(true);
+            delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
             // For any unmatched url, redirect to /state1
             $urlRouterProvider.otherwise("/");
@@ -69,11 +68,22 @@
                     controller: 'tracksController',
                     controllerAs: 'trc'
                 });
-        }]);
+        }
+    }
 
-    angular.module('app').run(['$rootScope', function($rootScope){
-        $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
-            $rootScope.currentState = toState.name;
-        });
-    }]);
-})();
+    class AppRun {
+
+        static $inject = ['$rootScope', 'VK', 'VK_CLIENT_ID'];
+
+        constructor($rootScope, VK, VK_CLIENT_ID){
+            $rootScope.$on('$stateChangeSuccess', function(event, toState){
+                $rootScope.currentState = toState.name;
+            });
+
+            VK.init({apiId: VK_CLIENT_ID});
+        }
+    }
+
+    angular.module('app').config(AppConfig);
+    angular.module('app').run(AppRun);
+}
