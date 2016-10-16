@@ -10,7 +10,7 @@ var config = {
     viewsDestinationPath: './views',
     indexView: 'index.html',
     appScriptsSourcePath: './src/scripts/**/*.js',
-    appStyleSourcePath: './src/styles/**/*.less',
+    appStyleSourcePath: './src/styles/main.less',
     distPath: './public',
     scriptsDestinationSubPath: '/scripts',
     styleDestinationSubPath: '/styles',

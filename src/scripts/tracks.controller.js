@@ -35,9 +35,9 @@
         $scope.goToAudioSearch = goToAudioSearch;
         $scope.onPageChanged = onPageChanged;
 
-        $scope.goToMyTracks = goToMyTracks;
-        $scope.goToPopular = goToPopular;
-        $scope.goToRecommended = goToRecommended;
+        $rootScope.goToMyTracks = goToMyTracks; //todo fix scope
+        $rootScope.goToPopular = goToPopular;
+        $rootScope.goToRecommended = goToRecommended;
 
         $scope.$on('searchByArtist', function (event, data) {
             vm.pattern = data;

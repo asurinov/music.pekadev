@@ -33,7 +33,7 @@
 
             $scope.seekRecord = function(newVal){
                 audioService.seekRecord(newVal);
-            }
+            };
 
             $scope.$watch('volume', function(newVal){
                 audioService.setVolume(newVal);
@@ -91,7 +91,7 @@
             function play(record, index){
                 if($scope.record.id !== record.id){
                     loadRecord(index);
-                }else {
+                } else {
                     audioService.play();
                 }
 
@@ -134,7 +134,7 @@
                 var player = audioService.getPlayer();
 
                 $scope.$apply(function(){
-                    $scope.record.progress = ((player.seek() || 0) / $scope.record.duration).toFixed(2);
+                    $scope.record.progress = ((player.seek() || 0) / $scope.record.duration).toFixed(3);
                 });
                 // If the sound is still playing, continue stepping.
                 if (player.playing()) {
@@ -151,8 +151,7 @@
             var progressBar = angular.element(element[0].querySelector('.progress-control'));
 
             progressBar.on('click', function (e) {
-                var x = e.pageX - this.parentElement.offsetLeft - this.offsetLeft;
-                scope.seekRecord(x * this.max / this.offsetWidth);
+                scope.seekRecord((e.layerX - this.offsetLeft) * this.max / this.offsetWidth);
             });
 
             scope.$on('destroy', function(){

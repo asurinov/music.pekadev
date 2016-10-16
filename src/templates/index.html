@@ -13,26 +13,38 @@
     <!-- endinject -->
 </head>
 <body ng-controller="appController as apc">
-<nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid">
-        <button class="btn btn-primary navbar-btn" ui-sref="main"><i class="fa fa-home"></i></button></li>
-        <button class="btn btn-primary navbar-btn" ui-sref="playlists">Плейлисты</button></li>
-        <button class="btn btn-primary navbar-btn" ng-hide="apc.isAuthorized" ng-click="apc.login()">
-            <i class="fa fa-vk"></i>
-            <span>Войти</span>
-        </button>
-        <span ng-if="apc.isAuthorized" class="pull-right">
-            <img class="img-circle hidden-xs" ng-src="{{apc.userInfo.photo_50}}" alt="">
-            <span class="hidden-xs" ng-bind="apc.userInfo.last_name"></span>
-            <span class="hidden-xs" ng-bind="apc.userInfo.first_name"></span>
-            <button class="btn btn-primary navbar-btn" ng-click="apc.logout()">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <button class="btn btn-primary navbar-btn" ui-sref="main"><i class="fa fa-home"></i></button>
+            <button class="btn btn-primary navbar-btn" ui-sref="playlists">Плейлисты</button>
+            <button class="btn btn-primary navbar-btn" ng-hide="apc.isAuthorized" ng-click="apc.login()">
                 <i class="fa fa-vk"></i>
-                <span>Выйти</span>
+                <span>Войти</span>
             </button>
-        </span>
+            <button type="button" class="btn btn-primary" ng-click="goToMyTracks()">
+                <span class="glyphicon glyphicon-ok-sign"></span>
+                Мои аудиозаписи
+            </button>
+            <button class="btn btn-primary" ng-click="goToRecommended()">
+                <span class="glyphicon glyphicon-question-sign"></span>
+                Мои рекомендации
+            </button>
+            <button class="btn btn-primary" ng-click="goToPopular()">
+                <span class="glyphicon glyphicon-warning-sign"></span>
+                Популярное
+            </button>
+            <span ng-if="apc.isAuthorized" class="pull-right">
+                <img class="img-circle hidden-xs" ng-src="{{apc.userInfo.photo_50}}" alt="">
+                <span class="hidden-xs" ng-bind="apc.userInfo.last_name"></span>
+                <span class="hidden-xs" ng-bind="apc.userInfo.first_name"></span>
+                <button class="btn btn-primary navbar-btn" ng-click="apc.logout()">
+                    <i class="fa fa-vk"></i>
+                    <span>Выйти</span>
+                </button>
+            </span>
+        </div>
+    </nav>
+    <div class="container" ng-if="apc.isAuthorized" ui-view>
     </div>
-</nav>
-<div class="container" ng-if="apc.isAuthorized" ui-view>
-</div>
 </body>
 </html>
