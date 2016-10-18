@@ -11,7 +11,7 @@ var config = {
     mediaSourcePath: './src/media/**/*.*',
     indexView: 'index.html',
     appScriptsSourcePath: './src/scripts/**/*.ts',
-    appStyleSourcePath: './src/styles/**/*.less',
+    appStyleSourcePath: './src/styles/main.less',
     distPath: './public',
     scriptsDestinationSubPath: '/scripts',
     styleDestinationSubPath: '/styles',

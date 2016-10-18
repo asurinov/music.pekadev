@@ -5,66 +5,73 @@ import {AudioService} from './audio.service';
 @Component({
     selector: 'track-grid',
     template: `
-<div>
-    <div class="audio-controls">
+    <div class="col-xs-12 audio-grid">
+        <table class="table">
+            <colgroup>
+                <col>
+                <col width="55px">
+                <col width="55px">
+            </colgroup>
+            <tbody>
+                <tr *ngFor="let audio of tracks"
+                    (click)="toggle(audio, index)"
+                    [ngClass]="{'playing': record.id === audio.id && audio.playing}">
+                    <td>
+                        <a class="track-artist"
+                              title="{{audio.artist}}"
+                              (click)="searchByArtist(audio.artist)">{{audio.artist}}</a>
+                        -
+                        <span title="{{audio.title}}">{{audio.title}}</span>
+                    </td>
+                    <td>
+                        <span>{{audio.duration}}</span>
+                    </td>
+                    <td>
+                        <a href="" download="" title="Скачать">
+                            <i class="fa fa-download"></i>
+                        </a>
+                        <a uiSref="track" [uiParams]="{ trackId: audio.owner_id + '_' + audio.id }" title="Ссылка на трек">
+                            <i class="fa fa-share"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="audio-controls col-xs-12">
         <div class="row">
-            <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 playback-buttons">
-                <button class="btn btn-sm btn-primary" (click)="previousTrack()" [disabled]="!tracks || tracks.length === 0">
-                    <span class="fa fa-step-backward"></span>
-                </button>
-                <button class="btn btn-sm btn-primary" (click)="toggle()" [disabled]="!tracks || tracks.length === 0">
-                    <span class="fa" [ngClass]="{'fa-play': !record.playing, 'fa-pause': record.playing}"></span>
-                </button>
-                <button class="btn btn-sm btn-primary" (click)="nextTrack()" [disabled]="!tracks || tracks.length === 0">
-                    <span class="fa fa-step-forward"></span>
-                </button>
-                <button class="btn btn-sm btn-primary" [ngClass]="{'active': repeatMode}" (click)="toggleRepeatMode()">
-                    <span class="fa fa-repeat"></span>
-                </button>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-3 hidden-xs track-info">
-                <div class="marquee" *ngIf="record.data">
-                    <span>{{record.author}}</span>
-                    <span>&#8212;</span>
-                    <span>{{record.title}}</span>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-3 col-sm-3 col-xs-6">
-                <label for="progress-control">Прогресс</label>
+            <div class="col-xs-12">
                 <progress id="progress-control" class="progress-control" min="0" max="1" [value]="record.progress"></progress>
             </div>
-            <div class="col-lg-2 col-md-2 col-sm-3 hidden-xs">
-                <label for="volume-control">Громкость</label>
-                <input id="volume-control" type="range" min="0" max="1" step="0.01" [(ngModel)]="volume"/>
+            <div class="col-xs-12">
+                <div class="playback-buttons">
+                    <button class="btn btn-sm btn-default" (click)="previousTrack()" [disabled]="!tracks || tracks.length === 0">
+                        <span class="fa fa-step-backward"></span>
+                    </button>
+                    <button class="btn btn-sm btn-default" (click)="toggle()" [disabled]="!tracks || tracks.length === 0">
+                        <span class="fa" [ngClass]="{'fa-play': !record.playing, 'fa-pause': record.playing}"></span>
+                    </button>
+                    <button class="btn btn-sm btn-default" (click)="nextTrack()" [disabled]="!tracks || tracks.length === 0">
+                        <span class="fa fa-step-forward"></span>
+                    </button>
+                    <button class="btn btn-sm btn-default" [ngClass]="{'active': repeatMode}" (click)="repeatMode = !repeatMode">
+                        <span class="fa fa-repeat"></span>
+                    </button>
+                </div>
+                <div class="track-info">
+                    <div class="marquee" *ngIf="record.data">
+                        <span>{{record.author}}</span>
+                        <span>&#8212;</span>
+                        <span>{{record.title}}</span>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-3 hidden-xs">
+                    <label for="volume-control">Громкость</label>
+                    <input id="volume-control" type="range" min="0" max="1" step="0.01" [(ngModel)]="volume"/>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="audio-grid">
-        <div class="row audio-grid-header">
-            <div class="col-md-1 col-sm-1 col-xs-1"></div>
-            <div class="col-md-9 col-sm-7 col-xs-7 text-left">Название</div>
-            <div class="col-md-1 col-sm-2 col-xs-2 text-center"><i class="fa fa-clock-o"></i></div>
-            <div class="col-md-1 col-sm-2 col-xs-2 text-center"><i class="fa fa-gear"></i></div>
-        </div>
-        <div class="row audio-grid-track" *ngFor="let audio of tracks" [ngClass]="{'playing': record.id === audio.id && audio.playing}">
-            <div class="col-md-1 col-sm-1 col-xs-1 text-center">
-                <span class="fa" [ngClass]="{'fa-play': (!audio.playing && record.id === audio.id || record.id !== audio.id), 'fa-pause': record.id === audio.id && audio.playing }" (click)="toggle(audio, index)"></span>
-            </div>
-            <div class="col-md-9 col-sm-7 col-xs-7 text-left">
-                <span class="track-artist" title="{{audio.artist}}" (click)="searchByArtist(audio.artist)">{{audio.artist}}</span>
-                &nbsp;-&nbsp;
-                <span title="{{audio.title}}">{{audio.title}}</span>
-            </div>
-            <div class="col-md-1 col-xs-2 col-xs-2 text-center">
-                <span>{{audio.duration}}</span>
-            </div>
-            <div class="col-md-1 col-sm-2 col-xs-2 text-center">
-                <a href="" download="" title="Скачать"><i class="fa fa-download"></i>{{audio.url}}</a>
-                <a ui-sref="track({ trackId: audio.owner_id + '_' + audio.id })" title="Ссылка на трек"><i class="fa fa-share"></i></a>
-            </div>
-        </div>
-    </div>
-</div>`,
+    </div>`,
     inputs: ['tracks']
 })
 
@@ -93,10 +100,10 @@ export class TrackGridComponent {
     }
 
     toggle(audio: ITrack, index: number){
-        if(this.record.playing){
+        if(this.record.playing && this.record.id === audio.id){
             this.pause();
         } else {
-            this.play(this.record.data || this.tracks[this.record.index], this.record.index);
+            this.play(audio, index);
         }
     }
 

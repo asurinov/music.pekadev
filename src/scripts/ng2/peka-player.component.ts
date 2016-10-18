@@ -12,26 +12,11 @@ import {StringService} from "./string.service";
     <div class="row">
         <div class="col-md-6 col-xs-12">
             <div class="row">
-                <button type="button" class="btn btn-primary" (click)="goToMyTracks()">
-                    <span class="glyphicon glyphicon-ok-sign"></span>
-                    Мои аудиозаписи
-                </button>
-                <button class="btn btn-primary" (click)="goToRecommended()">
-                    <span class="glyphicon glyphicon-question-sign"></span>
-                    Мои рекомендации
-                </button>
-                <button class="btn btn-primary" (click)="goToPopular()">
-                    <span class="glyphicon glyphicon-warning-sign"></span>
-                    Популярное
-                </button>
-            </div>
-            <div class="row">
                 <div class="input-group">
-                    <span class="input-group-addon">
-                        <label>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default">
                             <i class="fa fa-users"></i>
-                        </label>
-                        <input type="checkbox" aria-label="..." [(ngModel)]="byArtist">
+                        </button>
                     </span>
                     <input type="text" class="form-control" placeholder="Поиск аудиозаписей" [(ngModel)]="pattern" on-enter="goToAudioSearch(true)">
                     <span class="input-group-btn">

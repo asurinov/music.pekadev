@@ -1,0 +1,213 @@
+body, html {
+  height: 100%;
+}
+
+body {
+  position: relative;
+}
+
+.container {
+  position: relative;
+  height: ~"calc(100% - 80px)";
+}
+
+nav, header, .audio-grid, .audio-controls {
+  //border: 1px solid red !important;
+}
+
+header {
+  input[ng-model="trc.pattern"] {
+    width: 100%;
+  }
+}
+
+.abs-row() {
+  position: absolute;
+  width: ~"calc(100% - "@grid-gutter-width~")";
+}
+
+.audio-grid {
+  .abs-row();
+  top: 90px;
+  bottom: 55px;
+  overflow: auto;
+
+  table {
+    table-layout: fixed;
+  }
+
+  tr {
+    cursor: pointer;
+    transition: all .5s;
+    &:hover {
+      background-color: lighten(@background-color, 10%);
+    }
+  }
+
+  .playing {
+    background-color: @brand-primary !important;
+    color: lighten(@text-color, 10%);
+  }
+
+  th, td {
+    text-align: center;
+    i {
+      color: @text-color;
+    }
+  }
+  td:first-child {
+    text-align: left;
+    &, .track-artist {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  .track-artist {
+    color: @text-color;
+    vertical-align: middle;
+    max-width: 50%;
+    display: inline-block;
+    cursor: pointer;
+  }
+}
+
+.audio-controls {
+  .abs-row();
+  bottom: 0px;
+  .slider {
+    float: right;
+    &.slider-horizontal {
+      .slider-track {
+        background-image: none;
+        background-color: transparent;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.7);
+        height: 8px;
+        margin-top: -4px;
+      }
+      .slider-selection {
+        background-image: none;
+        background-color: @brand-primary;
+      }
+      .slider-handle {
+        display: none;
+      }
+    }
+  }
+
+  .playback-buttons, .track-info {
+    display: inline-block;
+  }
+  .track-info {
+    width: ~"calc(100% - 375px)";
+    overflow: hidden;
+    padding: 0 10px;
+    margin: 0 10px;
+    vertical-align: middle;
+    .marquee {
+      white-space: nowrap;
+      /* Starting position */
+      -moz-transform:translateX(100%);
+      -webkit-transform:translateX(100%);
+      transform:translateX(100%);
+      /* Apply animation to this element */
+      -moz-animation: track-info-marquee 30s linear infinite;
+      -webkit-animation: track-info-marquee 30s linear infinite;
+      animation: track-info-marquee 30s linear infinite;
+    }
+  }
+}
+
+.pagination {
+  margin: 10px;
+}
+
+button, input {
+  outline: none !important;
+}
+
+@-moz-keyframes track-info-marquee {
+  0%   { -moz-transform: translateX(100%); }
+  100% { -moz-transform: translateX(-200%); }
+}
+@-webkit-keyframes track-info-marquee {
+  0%   { -webkit-transform: translateX(100%); }
+  100% { -webkit-transform: translateX(-200%); }
+}
+@keyframes track-info-marquee {
+  0%   {
+    -moz-transform: translateX(100%); /* Firefox bug fix */
+    -webkit-transform: translateX(100%); /* Firefox bug fix */
+    transform: translateX(100%);
+  }
+  100% {
+    -moz-transform: translateX(-200%); /* Firefox bug fix */
+    -webkit-transform: translateX(-200%); /* Firefox bug fix */
+    transform: translateX(-100%);
+  }
+}
+
+.progress-control {
+  width: 100%;
+  height: 8px;
+  border-radius: 3px;
+  box-shadow: 0 3px 3px rgba(0,0,0,.5) inset;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.progress-control::-webkit-progress-bar {
+  background-color: transparent;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.7);
+}
+
+.progress-control::-webkit-progress-value  {
+  background-color: @brand-primary;
+  border-radius: 3px;
+}
+
+.progress-control::-moz-progress-bar {
+  background-color: lightgrey;
+  border-radius: 3px;
+}
+
+//color scheme
+
+body {
+  background-color: @background-color;
+  color: @text-color;
+}
+
+.btn {
+  transition: all .5s;
+}
+
+.btn-default {
+  &:active, &:focus {
+    background-color: @btn-default-bg;
+    color: @text-color;
+  }
+  &:hover {
+    background-color: lighten(@btn-default-bg, 10%);
+  }
+  &.active {
+    background-color: @main-color !important;
+    color: lighten(@text-color, 10%) !important;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.7);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: @btn-default-bg;
+  border-radius: 10px;
+}

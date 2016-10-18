@@ -122,12 +122,12 @@ module App {
             this.$scope.record.data.playing = false;
         }
 
-        toggle(){
+        toggle(record, index){
             if(this.canPlay()){
-                if(this.$scope.record.playing){
+                if(this.$scope.record.playing && this.$scope.record.id === record.id){
                     this.pause();
                 } else {
-                    this.play(this.$scope.record.data || this.$scope.tracks[this.$scope.record.index], this.$scope.record.index);
+                    this.play(record, index);
                 }
             }
         }
@@ -151,7 +151,7 @@ module App {
             var player = this.audioService.getPlayer();
 
             this.$scope.$apply(() => {
-                this.$scope.record.progress = ((player.seek() || 0) / this.$scope.record.duration).toFixed(2);
+                this.$scope.record.progress = ((player.seek() || 0) / this.$scope.record.duration).toFixed(3);
             });
             // If the sound is still playing, continue stepping.
             if (player.playing()) {
@@ -177,8 +177,7 @@ module App {
                 var progressBar = angular.element(element[0].querySelector('.progress-control'));
 
                 progressBar.on('click', (e: any) => {
-                    var x = e.pageX - e.currentTarget.parentElement.offsetLeft - e.currentTarget.offsetLeft;
-                    scope.seekRecord(x * e.currentTarget.max / e.currentTarget.offsetWidth);
+                    scope.seekRecord((e.layerX - e.currentTarget.offsetLeft) * e.currentTarget.max / e.currentTarget.offsetWidth);
                 });
 
                 scope.$on('destroy', () => {
