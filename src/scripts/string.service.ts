@@ -1,11 +1,14 @@
 module App {
     class StringService {
-        static $inject = ['stringDictionaries'];
+        static Dictionaries = {
+            'pages': ['страница', 'страницы', 'страниц'],
+            'records': ['запись', 'записи', 'записей']
+        }
 
         constructor(private stringDictionaries){}
 
         getWordEnding(num: number, dictionaryCode: string){
-            var dictionary = this.stringDictionaries[dictionaryCode];
+            var dictionary = StringService.Dictionaries[dictionaryCode];
             if(dictionary){
                 var rem = num % 10;
                 var rem100 = num % 100;

@@ -16,7 +16,8 @@ var config = {
     scriptsDestinationSubPath: '/scripts',
     styleDestinationSubPath: '/styles',
     fontsDestinationSubPath: '/fonts',
-    mediaDestinationSubPath: '/media'
+    mediaDestinationSubPath: '/media',
+    librariesPath: '/lib'
 };
 
 var debug = true;
@@ -114,4 +115,82 @@ gulp.task('release', function(cb){
 
 gulp.task('watch', ['buildAppResources'], function() {
     gulp.watch('./src/**/*', ['buildAppResources']);
+});
+
+/*сборка ng2*/
+
+gulp.task("ng2CopyResources", function(){
+    return gulp.src(['./src/templates/index.html', './systemjs.config.js'])
+        .pipe(gulp.dest(config.distPath));
+});
+
+gulp.task('ng2Scripts', ['ng2Libs'], buildAppScripts);
+gulp.task('ng2DevScripts', buildAppScripts);
+
+function buildAppScripts(){
+    return gulp.src([
+        './typings/index.d.ts',
+        './src/scripts/ng2/**/*.ts'])
+        .pipe(plugins.sourcemaps.init())
+        .pipe(plugins.typescript({
+            "outDir": "public/scripts",
+            "target": "es5",
+            "module": "system",
+            "moduleResolution": "node",
+            "sourceMap": true,
+            "emitDecoratorMetadata": true,
+            "experimentalDecorators": true,
+            "removeComments": false,
+            "noImplicitAny": false
+        }))
+        .pipe(plugins.sourcemaps.write())
+        .pipe(gulp.dest(config.distPath + config.scriptsDestinationSubPath));
+}
+
+gulp.task("ng2Libs", function(){
+    return gulp.src([
+        'core-js/client/shim.min.js',
+        'core-js/client/shim.min.js.map',
+        'systemjs/dist/system-polyfills.js',
+        'systemjs/dist/system.src.js',
+        'reflect-metadata/Reflect.js',
+        'reflect-metadata/Reflect.js.map',
+        'rxjs/**',
+        'zone.js/dist/zone.js',
+        '@angular/core/bundles/core.umd.js',
+        '@angular/common/bundles/common.umd.js',
+        '@angular/compiler/bundles/compiler.umd.js',
+        '@angular/platform-browser/bundles/platform-browser.umd.js',
+        '@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
+        '@angular/http/bundles/http.umd.js',
+        '@angular/router/bundles/router.umd.js',
+        '@angular/forms/bundles/forms.umd.js',
+        'ui-router-ng2/_bundles/ui-router-ng2.js',
+        'ui-router-ng2/_bundles/ui-router-ng2.js.map',
+        'howler/dist/howler.js',
+        'angular-2-local-storage/dist/*.js',
+        'angular-2-local-storage/dist/*.map'
+    ], {cwd: 'node_modules/**'})
+    .pipe(gulp.dest(config.distPath + config.librariesPath));
+});
+
+gulp.task("CleanNg2", function(cb){
+    return del([
+        config.distPath + '/*.*',
+        config.distPath + config.scriptsDestinationSubPath,
+        config.distPath + config.fontsDestinationSubPath,
+        config.distPath + config.styleDestinationSubPath
+    ]);
+});
+
+gulp.task("ng2FullBuild", ['Clean'], function(cb){
+    plugins.sequence('ng2CopyResources', 'BuildFonts', 'AppStyles', 'ng2Scripts')(cb);
+});
+
+gulp.task("ng2DevBuild", ['CleanNg2'], function(cb){
+    plugins.sequence('ng2CopyResources', 'BuildFonts', 'AppStyles', 'ng2DevScripts')(cb);
+});
+
+gulp.task('watchNg2', ['ng2FullBuild'], function() {
+    gulp.watch('./src/scripts/ng2/**/*.ts', ['ng2DevBuild']);
 });
