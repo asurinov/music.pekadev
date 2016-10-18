@@ -21,15 +21,15 @@
                 <i class="fa fa-vk"></i>
                 <span>Войти</span>
             </button>
-            <button type="button" class="btn btn-primary" ng-click="goToMyTracks()">
+            <button type="button" class="btn btn-primary" ui-sref="mytracks({page: 1})">
                 <span class="glyphicon glyphicon-ok-sign"></span>
                 Мои аудиозаписи
             </button>
-            <button class="btn btn-primary" ng-click="goToRecommended()">
+            <button class="btn btn-primary" ui-sref="recommended({page: 1})">
                 <span class="glyphicon glyphicon-question-sign"></span>
                 Мои рекомендации
             </button>
-            <button class="btn btn-primary" ng-click="goToPopular()">
+            <button class="btn btn-primary" ui-sref="popular">
                 <span class="glyphicon glyphicon-warning-sign"></span>
                 Популярное
             </button>

@@ -122,12 +122,12 @@ module App {
             this.$scope.record.data.playing = false;
         }
 
-        toggle(){
+        toggle(record, index){
             if(this.canPlay()){
-                if(this.$scope.record.playing){
+                if(this.$scope.record.playing && this.$scope.record.id === record.id){
                     this.pause();
                 } else {
-                    this.play(this.$scope.record.data || this.$scope.tracks[this.$scope.record.index], this.$scope.record.index);
+                    this.play(record, index);
                 }
             }
         }
@@ -177,7 +177,7 @@ module App {
                 var progressBar = angular.element(element[0].querySelector('.progress-control'));
 
                 progressBar.on('click', (e: any) => {
-                    scope.seekRecord((e.layerX - this.offsetLeft) * this.max / this.offsetWidth);
+                    scope.seekRecord((e.layerX - e.currentTarget.offsetLeft) * e.currentTarget.max / e.currentTarget.offsetWidth);
                 });
 
                 scope.$on('destroy', () => {

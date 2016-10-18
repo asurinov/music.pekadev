@@ -7,7 +7,7 @@
         </colgroup>
         <tbody>
             <tr ng-repeat="audio in tracks"
-                ng-click="tgc.play(audio, $index)"
+                ng-click="tgc.toggle(audio, $index)"
                 ng-class="{'playing': record.id === audio.id && audio.playing}">
                 <!--<td>-->
                     <!--<span class="fa fa-play"-->
