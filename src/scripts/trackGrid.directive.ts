@@ -151,7 +151,7 @@ module App {
             var player = this.audioService.getPlayer();
 
             this.$scope.$apply(() => {
-                this.$scope.record.progress = ((player.seek() || 0) / this.$scope.record.duration).toFixed(2);
+                this.$scope.record.progress = ((player.seek() || 0) / this.$scope.record.duration).toFixed(3);
             });
             // If the sound is still playing, continue stepping.
             if (player.playing()) {
@@ -177,8 +177,7 @@ module App {
                 var progressBar = angular.element(element[0].querySelector('.progress-control'));
 
                 progressBar.on('click', (e: any) => {
-                    var x = e.pageX - e.currentTarget.parentElement.offsetLeft - e.currentTarget.offsetLeft;
-                    scope.seekRecord(x * e.currentTarget.max / e.currentTarget.offsetWidth);
+                    scope.seekRecord((e.layerX - this.offsetLeft) * this.max / this.offsetWidth);
                 });
 
                 scope.$on('destroy', () => {
