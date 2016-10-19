@@ -192,5 +192,5 @@ gulp.task("ng2DevBuild", ['CleanNg2'], function(cb){
 });
 
 gulp.task('watchNg2', ['ng2FullBuild'], function() {
-    gulp.watch('./src/scripts/ng2/**/*.ts', ['ng2DevBuild']);
+    gulp.watch(['./src/scripts/ng2/**/*.ts', './src/styles/**/*.less'], ['ng2DevBuild']);
 });

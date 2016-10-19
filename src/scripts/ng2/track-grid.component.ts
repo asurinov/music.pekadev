@@ -13,21 +13,21 @@ import {AudioService} from './audio.service';
                 <col width="55px">
             </colgroup>
             <tbody>
-                <tr *ngFor="let audio of tracks"
-                    (click)="toggle(audio, index)"
-                    [ngClass]="{'playing': record.id === audio.id && audio.playing}">
+                <tr *ngFor="let audio of tracks; let i = index"
+                    (click)="toggle(audio, i)"
+                    [ngClass]="{'playing': record.id === audio.id && record.playing}">
                     <td>
                         <a class="track-artist"
                               title="{{audio.artist}}"
                               (click)="searchByArtist(audio.artist)">{{audio.artist}}</a>
-                        -
+                        - 
                         <span title="{{audio.title}}">{{audio.title}}</span>
                     </td>
                     <td>
                         <span>{{audio.duration}}</span>
                     </td>
                     <td>
-                        <a href="" download="" title="Скачать">
+                        <a [href]="audio.url" download="" title="Скачать" (click)="$event.stopPropagation()">
                             <i class="fa fa-download"></i>
                         </a>
                         <a uiSref="track" [uiParams]="{ trackId: audio.owner_id + '_' + audio.id }" title="Ссылка на трек">
@@ -54,20 +54,20 @@ import {AudioService} from './audio.service';
                     <button class="btn btn-sm btn-default" (click)="nextTrack()" [disabled]="!tracks || tracks.length === 0">
                         <span class="fa fa-step-forward"></span>
                     </button>
-                    <button class="btn btn-sm btn-default" [ngClass]="{'active': repeatMode}" (click)="repeatMode = !repeatMode">
+                    <button class="btn btn-sm btn-default" [ngClass]="{'active': repeatMode}" (click)="toggleRepeatMode()">
                         <span class="fa fa-repeat"></span>
                     </button>
                 </div>
                 <div class="track-info">
-                    <div class="marquee" *ngIf="record.data">
+                    <div class="marquee" *ngIf="record.id">
                         <span>{{record.author}}</span>
                         <span>&#8212;</span>
                         <span>{{record.title}}</span>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-3 hidden-xs">
+                <div class="slider">
                     <label for="volume-control">Громкость</label>
-                    <input id="volume-control" type="range" min="0" max="1" step="0.01" [(ngModel)]="volume"/>
+                    <input id="volume-control" type="range" min="0" max="1" step="0.01" [(ngModel)]="volume" (ngModelChange)="setVolume($event)"/>
                 </div>
             </div>
         </div>
@@ -94,9 +94,12 @@ export class TrackGridComponent {
             progress: 0,
             author: null,
             title: null,
-            playing: false,
-            data: null
+            playing: false
         };
+    }
+
+    setVolume(){
+        this.audioService.setVolume(parseFloat(this.volume.toString()));
     }
 
     toggle(audio: ITrack, index: number){
@@ -115,21 +118,19 @@ export class TrackGridComponent {
         }
 
         this.record.playing = true;
-        record.playing = true;
     }
 
     pause(){
         this.audioService.pause();
         this.record.playing = false;
-        this.record.data.playing = false;
     }
 
     loadRecord(index){
-        var trackIndex = index % this.tracks.length;
+        let trackIndex = index % this.tracks.length;
 
-        var record = this.tracks[trackIndex];
+        const record = this.tracks[trackIndex];
         if(record) {
-            var player = this.audioService.getPlayer();
+            let player = this.audioService.getPlayer();
 
             if(player){
                 player.stop();
@@ -141,16 +142,15 @@ export class TrackGridComponent {
 
             player.on('load', () => {
                 player.play();
-                this.record = {
+                this.record = Object.assign(this.record, {
                     duration: Math.round(player.duration()),
                     id: record.id,
                     author: record.artist,
                     title: record.title,
                     playing: true,
-                    data: record,
-                    index: trackIndex
-                };
-                record.playing = true;
+                    index: trackIndex,
+                    progress: 0
+                });
             });
 
             player.on('play', () => {
@@ -182,10 +182,8 @@ export class TrackGridComponent {
     updateProgress(){
         var player = this.audioService.getPlayer();
 
-        this.record.progress = ((player.seek() || 0) / this.record.duration).toFixed(2);
-
-        // If the sound is still playing, continue stepping.
         if (player.playing()) {
+            this.record.progress = (player.seek() || 0) / this.record.duration;
             requestAnimationFrame(() => { this.updateProgress()});
         }
     }
