@@ -18,7 +18,7 @@ import {StringService} from "./string.service";
                             <i class="fa fa-users"></i>
                         </button>
                     </span>
-                    <input type="text" class="form-control" placeholder="Поиск аудиозаписей" [(ngModel)]="pattern" on-enter="goToAudioSearch(true)">
+                    <input type="text" class="form-control" placeholder="Поиск аудиозаписей" [(ngModel)]="pattern" (keyup.enter)="goToAudioSearch(true)">
                     <span class="input-group-btn">
                         <button class="btn btn-default" type="button" (click)="goToAudioSearch(true)" [disabled]="!pattern">
                             <i class="fa fa-search"></i>
