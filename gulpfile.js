@@ -169,7 +169,9 @@ gulp.task("ng2Libs", function(){
         'ui-router-ng2/_bundles/ui-router-ng2.js.map',
         'howler/dist/howler.js',
         'angular-2-local-storage/dist/*.js',
-        'angular-2-local-storage/dist/*.map'
+        'angular-2-local-storage/dist/*.map',
+        '@ng-bootstrap/ng-bootstrap/bundles/ng-bootstrap.js',
+        '@ng-bootstrap/ng-bootstrap/bundles/ng-bootstrap.js.map',
     ], {cwd: 'node_modules/**'})
     .pipe(gulp.dest(config.distPath + config.librariesPath));
 });

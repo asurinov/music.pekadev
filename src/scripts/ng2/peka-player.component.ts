@@ -3,7 +3,6 @@ import {StateService} from 'ui-router-ng2';
 import {TrackTypes} from './enums';
 import {IPaging, ITrackList, ITrack} from './player.models';
 import {AppService} from "./app.service";
-import {StringService} from "./string.service";
 
 @Component({
     selector: 'peka-player',
@@ -28,20 +27,8 @@ import {StringService} from "./string.service";
             </div>
         </div>
     </div>
-    <!--<div *ngIf="trc.paging.totalItems > trc.paging.itemsPerPage">
-        <ul uib-pagination class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
-            ng-model="trc.paging.currentPage"
-            ng-change="onPageChanged()"
-            total-items="trc.paging.totalItems"
-            items-per-page="trc.paging.itemsPerPage"
-            max-size="trc.paging.maxSize"
-            boundary-links="true">
-        </ul>
-    </div>-->
-    <div class="row">
-        <span class="pull-left">{{paging.totalPagesCaption}}</span>
-        <span class="pull-right">{{paging.totalItemsCaption}}</span>
-    </div>
+    <ngb-pagination [collectionSize]="paging.totalItems" [(page)]="paging.currentPage" [pageSize]="paging.itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"></ngb-pagination>
+    <ui-view></ui-view>
     <track-grid [tracks]="tracks"></track-grid>
 </div>`
 })
@@ -58,7 +45,6 @@ export class PlayerComponent implements OnInit {
 
     constructor(
         private appService: AppService,
-        private stringService: StringService,
         private stateService: StateService
     ) {
         this.paging = {
@@ -133,8 +119,6 @@ export class PlayerComponent implements OnInit {
             this.paging.totalItems = res.length;
             this.paging.itemsPerPage = res.length;
             this.paging.totalPages = 1;
-            this.paging.totalPagesCaption = this.stringService.getWordEnding(this.paging.totalPages, 'pages');
-            this.paging.totalItemsCaption = this.stringService.getWordEnding(this.paging.totalItems, 'records');
             this.tracks = res;
         });
     }
@@ -171,8 +155,6 @@ export class PlayerComponent implements OnInit {
     private recalculatePaging(paging: IPaging, count: number){
         paging.totalItems = count;
         paging.totalPages = Math.ceil(count / paging.itemsPerPage);
-        paging.totalPagesCaption = this.stringService.getWordEnding(paging.totalPages, 'pages');
-        paging.totalItemsCaption = this.stringService.getWordEnding(paging.totalItems, 'records');
     }
 
     private checkPaging(type: TrackTypes){

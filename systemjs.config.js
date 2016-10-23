@@ -25,7 +25,8 @@
             'rxjs': 'npm:rxjs',
             'ui-router-ng2': 'npm:ui-router-ng2/_bundles/ui-router-ng2.js',
             'howler': 'npm:howler/dist',
-            'angular-2-local-storage': 'npm:angular-2-local-storage/dist'
+            'angular-2-local-storage': 'npm:angular-2-local-storage/dist',
+            '@ng-bootstrap/ng-bootstrap': 'npm:/@ng-bootstrap/ng-bootstrap/bundles/ng-bootstrap.js',
         },
         // packages tells the System loader how to load when no filename and/or no extension
         packages: {

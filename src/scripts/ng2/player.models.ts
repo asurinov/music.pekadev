@@ -4,8 +4,6 @@ export interface IPaging {
     currentPage: number;
     maxSize: number;
     itemsPerPage: number;
-    totalPagesCaption?: string;
-    totalItemsCaption?: string;
 }
 
 export interface ITrackList {

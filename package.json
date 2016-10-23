@@ -13,6 +13,7 @@
     "@angular/http": "~2.0.2",
     "@angular/platform-browser": "~2.0.2",
     "@angular/platform-browser-dynamic": "~2.0.2",
+    "@ng-bootstrap/ng-bootstrap": "^1.0.0-alpha.9",
     "angular-2-local-storage": "0.0.20",
     "body-parser": "~1.10.1",
     "config": "^1.10.0",
