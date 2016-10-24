@@ -1,9 +1,29 @@
-export interface IPaging {
+export interface IGridModel {
+    paging: Paging;
+    tracks: ITrack[];
+}
+
+export class Paging {
+    itemsPerPage = 50;
     totalItems: number;
-    totalPages: number;
     currentPage: number;
-    maxSize: number;
-    itemsPerPage: number;
+
+    constructor(page: number){
+        this.currentPage = page;
+        this.totalItems = 0;
+    }
+
+    get totalPages(){
+        return Math.ceil(this.totalItems / this.itemsPerPage);
+    }
+
+    setItemsPerPage(newVal: number){
+        this.itemsPerPage = newVal;
+    }
+
+    setTotalItems(newVal: number){
+        this.totalItems = newVal;
+    }
 }
 
 export interface ITrackList {

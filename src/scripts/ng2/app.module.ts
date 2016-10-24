@@ -11,6 +11,8 @@ import * as States from './app.states';
 import {TrackGridComponent} from "./track-grid.component";
 import {AppService} from "./app.service";
 import {AudioService} from "./audio.service";
+import {PekaUIRouterConfig} from "./configs/router.config";
+import {PekaTracksComponent} from "./peka-tracks.component";
 
 let localStorageServiceConfig = {
     prefix: 'peka',
@@ -30,10 +32,11 @@ let localStorageServiceConfig = {
                 States.recommendedState,
                 States.searchState
             ],
-            useHash: false
+            useHash: false,
+            configClass: PekaUIRouterConfig
         })
     ],
-    declarations: [ AppComponent, NavbarComponent, PlayerComponent, TrackGridComponent ],
+    declarations: [ AppComponent, NavbarComponent, PlayerComponent, TrackGridComponent, PekaTracksComponent ],
     providers: [LocalStorageService, AppService, AudioService,
         {
             provide: LOCAL_STORAGE_SERVICE_CONFIG, useValue: localStorageServiceConfig

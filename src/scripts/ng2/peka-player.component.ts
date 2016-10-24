@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {StateService} from 'ui-router-ng2';
 import {TrackTypes} from './enums';
-import {IPaging, ITrackList, ITrack} from './player.models';
+import {Paging, ITrackList, ITrack} from './player.models';
 import {AppService} from "./app.service";
 
 @Component({
@@ -27,9 +27,7 @@ import {AppService} from "./app.service";
             </div>
         </div>
     </div>
-    <ngb-pagination [collectionSize]="paging.totalItems" [(page)]="paging.currentPage" [pageSize]="paging.itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true"></ngb-pagination>
     <ui-view></ui-view>
-    <track-grid [tracks]="tracks"></track-grid>
 </div>`
 })
 
@@ -39,7 +37,7 @@ export class PlayerComponent implements OnInit {
     byArtist: boolean = false;
     dataType: TrackTypes;
     pattern: string;
-    paging: IPaging;
+    paging: Paging;
 
     tracks: ITrack[];
 
@@ -47,13 +45,7 @@ export class PlayerComponent implements OnInit {
         private appService: AppService,
         private stateService: StateService
     ) {
-        this.paging = {
-            itemsPerPage: PlayerComponent.ItemsPerPage,
-            totalItems: 0,
-            totalPages: 0,
-            currentPage: 1,
-            maxSize: 10
-        };
+        this.paging = new Paging(1);
     }
 
     ngOnInit(): void {
@@ -61,7 +53,7 @@ export class PlayerComponent implements OnInit {
             case 'recommended':
                 this.dataType = TrackTypes.Recommended;
                 this.paging.currentPage = parseInt(this.stateService.params['page'], 10) || 1;
-                this.getRecommendationsList(this.appService.getUserId());
+                this.getRecommendationsList();
                 break;
             case 'popular':
                 this.dataType = TrackTypes.MyTracks;
@@ -116,45 +108,37 @@ export class PlayerComponent implements OnInit {
 
     getPopularList(){
         this.appService.getPopularList(this.paging).then((res: any[]) => {
-            this.paging.totalItems = res.length;
-            this.paging.itemsPerPage = res.length;
-            this.paging.totalPages = 1;
+            this.paging.setTotalItems(res.length);
             this.tracks = res;
         });
     }
 
     getAudioList(){
         this.appService.getAudioList(this.paging).then((res: ITrackList) => {
-            this.recalculatePaging(this.paging, res.count);
+            this.paging.setTotalItems(res.count);
             this.tracks = res.items;
         });
     }
 
     getRecommendationsList(params?){
-        return this.appService.getRecommendations(params, this.paging).then((res: ITrackList) => {
-            this.recalculatePaging(this.paging, res.count);
+        return this.appService.getRecommendations(this.paging).then((res: ITrackList) => {
+            this.paging.setTotalItems(res.count);
             this.tracks = res.items;
         });
     }
 
     audioSearch(){
         this.appService.searchAudio(this.pattern, this.byArtist, this.paging).then((res: ITrackList) => {
-            this.recalculatePaging(this.paging, res.count);
-            this.paging.totalItems = res.count;
+            this.paging.setTotalItems(res.count);
             this.tracks = res.items;
         });
     }
 
     getAudioById(trackId){
         this.appService.getAudioById(trackId).then((res: ITrackList) => {
-            this.recalculatePaging(this.paging, res.count);
+            this.paging.setTotalItems(res.count);
             this.tracks = res.items;
         });
-    }
-
-    private recalculatePaging(paging: IPaging, count: number){
-        paging.totalItems = count;
-        paging.totalPages = Math.ceil(count / paging.itemsPerPage);
     }
 
     private checkPaging(type: TrackTypes){
@@ -165,13 +149,7 @@ export class PlayerComponent implements OnInit {
     }
 
     private resetPaging(){
-        this.paging = {
-            totalItems: 0,
-            totalPages: 0,
-            currentPage: 1,
-            maxSize: 10,
-            itemsPerPage: PlayerComponent.ItemsPerPage
-        };
+        this.paging = new Paging(1);
     }
 
     getCurrentPage(){

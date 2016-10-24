@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {IPaging} from "./player.models";
+import {Paging} from "./player.models";
 
 @Injectable()
 export class AppService {
@@ -63,18 +63,18 @@ export class AppService {
         });
     }
 
-    getPopularList(paging: IPaging){
+    getPopularList(paging: Paging){
         const params = this.getParamsWithPaging(paging);
         return this.callApi('audio.getPopular', params);
     }
 
-    getAudioList(paging: IPaging){
+    getAudioList(paging: Paging){
         const params = Object.assign(this.getParamsWithPaging(paging), { owner_id: this.getUserId() });
 
         return this.callApi('audio.get', params);
     }
 
-    searchAudio(pattern: string, byArtist: boolean, paging: IPaging){
+    searchAudio(pattern: string, byArtist: boolean, paging: Paging){
         const params = Object.assign(this.getParamsWithPaging(paging), {
             q: pattern,
             performer_only: byArtist ? 1 : 0,
@@ -85,8 +85,8 @@ export class AppService {
         return this.callApi('audio.search', params);
     }
 
-    getRecommendations(param, paging: IPaging){
-        var params = Object.assign(this.getParamsWithPaging(paging), param);
+    getRecommendations(paging: Paging){
+        var params = Object.assign(this.getParamsWithPaging(paging), {user_id: this.getUserId()});
         return this.callApi('audio.getRecommendations', params);
     }
 
@@ -99,7 +99,7 @@ export class AppService {
         return this.callApi('audio.getById', params);
     }
 
-    private getParamsWithPaging(paging: IPaging){
+    private getParamsWithPaging(paging: Paging){
         return Object.assign(this.getBaseParam(), {
             offset: (paging.currentPage - 1) * paging.itemsPerPage,
             count: paging.itemsPerPage,
