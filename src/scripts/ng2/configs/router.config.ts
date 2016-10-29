@@ -5,6 +5,6 @@ import {Inject, Injectable} from "@angular/core";
 @Injectable()
 export class PekaUIRouterConfig {
     constructor(@Inject(UIRouter) router: UIRouter) {
-        router.urlRouterProvider.otherwise(() => router.stateService.go('tracks'));
+        router.urlRouterProvider.otherwise(() => router.stateService.go('mytracks', { page: 1}));
     }
 }

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter} from '@angular/core';
 import {ITrack} from './player.models';
 import {AudioService} from './audio.service';
 
@@ -19,12 +19,12 @@ import {AudioService} from './audio.service';
                     <td>
                         <a class="track-artist"
                               title="{{audio.artist}}"
-                              (click)="searchByArtist(audio.artist)">{{audio.artist}}</a>
+                              (click)="searchByArtist(audio.artist); $event.stopPropagation();">{{audio.artist}}</a>
                         - 
                         <span title="{{audio.title}}">{{audio.title}}</span>
                     </td>
                     <td>
-                        <span>{{audio.duration}}</span>
+                        <span>{{audio.duration | pekaDuration}}</span>
                     </td>
                     <td>
                         <a [href]="audio.url" download="" title="Скачать" (click)="$event.stopPropagation()">
@@ -72,7 +72,8 @@ import {AudioService} from './audio.service';
             </div>
         </div>
     </div>`,
-    inputs: ['tracks']
+    inputs: ['tracks'],
+    outputs: ['onSearchByArtist']
 })
 
 export class TrackGridComponent {
@@ -82,6 +83,8 @@ export class TrackGridComponent {
 
     record;
     volume: number;
+
+    onSearchByArtist: EventEmitter<string> = new EventEmitter<string>();
 
     constructor(private audioService: AudioService){
         this.volume = audioService.getVolume();
@@ -188,8 +191,8 @@ export class TrackGridComponent {
         }
     }
 
-    searchByArtist(artist){
-        //this.$emit('searchByArtist', artist);
+    searchByArtist(artist: string){
+        this.onSearchByArtist.emit(artist);
     }
 
     toggleRepeatMode(){

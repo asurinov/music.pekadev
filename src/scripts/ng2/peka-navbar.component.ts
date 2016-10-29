@@ -6,21 +6,20 @@ import {UserInfo } from './userInfo.model';
     template: `
 <nav class="navbar navbar-default">
     <div class="container-fluid">
-        <button class="btn btn-primary navbar-btn" uiSref="tracks"><i class="fa fa-home"></i></button>
-        <button class="btn btn-primary navbar-btn" uiSref="playlists">Плейлисты</button>
         <button class="btn btn-primary navbar-btn" *ngIf="!isAuthorized" (click)="login()">
             <i class="fa fa-vk"></i>
             <span>Войти</span>
         </button>
-        <button type="button" class="btn btn-primary" *ngIf="isAuthorized" uiSref="tracks.my" [uiParams]="{ page: 1 }">
+        <button class="btn btn-primary navbar-btn" *ngIf="isAuthorized" uiSref="playlists">Плейлисты</button>
+        <button type="button" class="btn btn-primary" *ngIf="isAuthorized" uiSref="mytracks" [uiParams]="{ page: 1 }">
             <span class="glyphicon glyphicon-ok-sign"></span>
             Мои аудиозаписи
         </button>
-        <button class="btn btn-primary" *ngIf="isAuthorized" uiSref="tracks.recommended" [uiParams]="{ page: 1 }">
+        <button class="btn btn-primary" *ngIf="isAuthorized" uiSref="recommended" [uiParams]="{ page: 1 }">
             <span class="glyphicon glyphicon-question-sign"></span>
             Мои рекомендации
         </button>
-        <button class="btn btn-primary" *ngIf="isAuthorized" uiSref="tracks.popular">
+        <button class="btn btn-primary" *ngIf="isAuthorized" uiSref="popular">
             <span class="glyphicon glyphicon-warning-sign"></span>
             Популярное
         </button>

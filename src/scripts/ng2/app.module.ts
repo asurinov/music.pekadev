@@ -12,7 +12,7 @@ import {TrackGridComponent} from "./track-grid.component";
 import {AppService} from "./app.service";
 import {AudioService} from "./audio.service";
 import {PekaUIRouterConfig} from "./configs/router.config";
-import {PekaTracksComponent} from "./peka-tracks.component";
+import {PekaDurationPipe} from "./peka.duration.pipe";
 
 let localStorageServiceConfig = {
     prefix: 'peka',
@@ -26,7 +26,6 @@ let localStorageServiceConfig = {
         NgbModule.forRoot(),
         UIRouterModule.forRoot({
             states: [
-                States.mainState,
                 States.myTracksState,
                 States.popularState,
                 States.recommendedState,
@@ -36,7 +35,7 @@ let localStorageServiceConfig = {
             configClass: PekaUIRouterConfig
         })
     ],
-    declarations: [ AppComponent, NavbarComponent, PlayerComponent, TrackGridComponent, PekaTracksComponent ],
+    declarations: [ PekaDurationPipe, AppComponent, NavbarComponent, PlayerComponent, TrackGridComponent ],
     providers: [LocalStorageService, AppService, AudioService,
         {
             provide: LOCAL_STORAGE_SERVICE_CONFIG, useValue: localStorageServiceConfig

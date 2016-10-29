@@ -24,6 +24,10 @@ export class Paging {
     setTotalItems(newVal: number){
         this.totalItems = newVal;
     }
+
+    setPage(val: number){
+        this.currentPage = val;
+    }
 }
 
 export interface ITrackList {
