@@ -1,6 +1,7 @@
 import {Component, EventEmitter} from '@angular/core';
 import {ITrack} from './player.models';
 import {AudioService} from './audio.service';
+import * as _ from "underscore";
 
 @Component({
     selector: 'track-grid',
@@ -41,7 +42,7 @@ import {AudioService} from './audio.service';
     <div class="audio-controls col-xs-12">
         <div class="row">
             <div class="col-xs-12">
-                <progress id="progress-control" class="progress-control" min="0" max="1" [value]="record.progress"></progress>
+                <peka-progress [value]="record.progress" (onValueChange)="seekRecord($event)"></peka-progress>
             </div>
             <div class="col-xs-12">
                 <div class="playback-buttons">
@@ -66,8 +67,8 @@ import {AudioService} from './audio.service';
                     </div>
                 </div>
                 <div class="slider">
-                    <label for="volume-control">Громкость</label>
-                    <input id="volume-control" type="range" min="0" max="1" step="0.01" [(ngModel)]="volume" (ngModelChange)="setVolume($event)"/>
+                    <peka-slider [value]="volume" (onValueChange)="setVolume($event)"></peka-slider>
+                    <!--<input id="volume-control" type="range" min="0" max="1" step="0.01" [(ngModel)]="volume" (ngModelChange)="setVolume($event)"/>-->
                 </div>
             </div>
         </div>
@@ -101,20 +102,24 @@ export class TrackGridComponent {
         };
     }
 
-    setVolume(){
-        this.audioService.setVolume(parseFloat(this.volume.toString()));
+    setVolume(val: number){
+        this.audioService.setVolume(val);
     }
 
-    toggle(audio: ITrack, index: number){
-        if(this.record.playing && this.record.id === audio.id){
+    seekRecord(val){
+        this.audioService.seekRecord(val);
+    }
+
+    toggle(audio?: ITrack, index?: number){
+        if(this.record.playing && (!audio || this.record.id === audio.id)){
             this.pause();
         } else {
-            this.play(audio, index);
+            this.play(audio ? audio.id : this.record.id, index || this.record.index);
         }
     }
 
-    play(record, index){
-        if(this.record.id !== record.id){
+    play(recordId: number, index: number){
+        if(!this.record.id || this.record.id !== recordId){
             this.loadRecord(index);
         }else {
             this.audioService.play();

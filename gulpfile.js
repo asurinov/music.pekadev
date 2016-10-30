@@ -1,7 +1,6 @@
 var gulp = require("gulp");
 var del = require('del');
 var series = require('stream-series');
-var bowerSrc = require('main-bower-files');
 var plugins = require('gulp-load-plugins')();
 
 var tsProject = plugins.typescript.createProject('tsconfig.json');
@@ -24,20 +23,23 @@ var debug = true;
 
 gulp.task('BuildFonts', function () {
     return gulp.src([
-        './bower_components/bootstrap/fonts/**/*.woff',
-        './bower_components/bootstrap/fonts/**/*.woff2',
-        './bower_components/bootstrap/fonts/**/*.ttf',
-        './bower_components/font-awesome/fonts/**/*.woff',
-        './bower_components/font-awesome/fonts/**/*.woff2',
-        './bower_components/font-awesome/fonts/**/*.ttf'
+        './node_modules/bootstrap/fonts/**/*.woff',
+        './node_modules/bootstrap/fonts/**/*.woff2',
+        './node_modules/bootstrap/fonts/**/*.ttf',
+        './node_modules/font-awesome/fonts/**/*.woff',
+        './node_modules/font-awesome/fonts/**/*.woff2',
+        './node_modules/font-awesome/fonts/**/*.ttf'
     ])
     .pipe(gulp.dest(config.distPath + config.fontsDestinationSubPath));
 });
 
 gulp.task('VendorStyles', function(){
-    return gulp.src(bowerSrc('**/*.css'))
-        .pipe(plugins.concat('vendors.css'))
-        .pipe(gulp.dest(config.distPath + config.styleDestinationSubPath));
+    return gulp.src([
+        './node_modules/font-awesome/css/font-awesome.min.css',
+        './node_modules/bootstrap-slider/dist/css/bootstrap-slider.min.css'
+    ])
+    .pipe(plugins.concat('vendors.css'))
+    .pipe(gulp.dest(config.distPath + config.styleDestinationSubPath));
 });
 
 gulp.task('AppStyles', ['VendorStyles'], function () {
@@ -172,6 +174,9 @@ gulp.task("ng2Libs", function(){
         'angular-2-local-storage/dist/*.map',
         '@ng-bootstrap/ng-bootstrap/bundles/ng-bootstrap.js',
         '@ng-bootstrap/ng-bootstrap/bundles/ng-bootstrap.js.map',
+        'bootstrap-slider/dist/bootstrap-slider.min.js',
+        'underscore/underscore-min.js',
+        'underscore/underscore-min.map'
     ], {cwd: 'node_modules/**'})
     .pipe(gulp.dest(config.distPath + config.librariesPath));
 });

@@ -13,8 +13,8 @@ export class AudioService {
     constructor(private localStorageService: LocalStorageService){
         const volume = localStorageService.get<number>(AudioService.VolumeKey);
         if(volume !== null){
-            if(volume <= 1 && volume > 0){
-                Howler.volume(volume);
+            if(volume <= 100 && volume > 0){
+                Howler.volume(volume / 100);
             } else {
                 localStorageService.remove(AudioService.VolumeKey);
             }
@@ -48,11 +48,11 @@ export class AudioService {
 
     setVolume(val: number){
         this.localStorageService.set(AudioService.VolumeKey, val);
-        Howler.volume(val);
+        Howler.volume(val / 100);
     }
 
     getVolume(){
-        return Howler.volume();
+        return Howler.volume() * 100;
     }
 
     play(){

@@ -27,6 +27,7 @@
             'howler': 'npm:howler/dist',
             'angular-2-local-storage': 'npm:angular-2-local-storage/dist',
             '@ng-bootstrap/ng-bootstrap': 'npm:/@ng-bootstrap/ng-bootstrap/bundles/ng-bootstrap.js',
+            'underscore': 'npm:/underscore/'
         },
         // packages tells the System loader how to load when no filename and/or no extension
         packages: {
@@ -43,6 +44,10 @@
             },
             'howler': {
                 main: './howler',
+                defaultExtension: 'js'
+            },
+            'underscore': {
+                main: './underscore-min',
                 defaultExtension: 'js'
             }
         }

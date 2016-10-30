@@ -42,9 +42,7 @@ module App {
 
         seekRecord(val: number){
             if(this.player){
-                this.player.pause();
                 this.player.seek(val *  this.player.duration());
-                this.player.play();
             }
         }
 

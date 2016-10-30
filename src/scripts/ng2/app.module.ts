@@ -13,6 +13,9 @@ import {AppService} from "./app.service";
 import {AudioService} from "./audio.service";
 import {PekaUIRouterConfig} from "./configs/router.config";
 import {PekaDurationPipe} from "./peka.duration.pipe";
+import {PekaSliderComponent} from "./peka-slider.component";
+import {PekaProgressComponent} from "./peka-progress.component";
+
 
 let localStorageServiceConfig = {
     prefix: 'peka',
@@ -35,7 +38,7 @@ let localStorageServiceConfig = {
             configClass: PekaUIRouterConfig
         })
     ],
-    declarations: [ PekaDurationPipe, AppComponent, NavbarComponent, PlayerComponent, TrackGridComponent ],
+    declarations: [ PekaDurationPipe, AppComponent, NavbarComponent, PlayerComponent, TrackGridComponent, PekaSliderComponent, PekaProgressComponent ],
     providers: [LocalStorageService, AppService, AudioService,
         {
             provide: LOCAL_STORAGE_SERVICE_CONFIG, useValue: localStorageServiceConfig
