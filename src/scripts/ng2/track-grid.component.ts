@@ -114,7 +114,7 @@ export class TrackGridComponent {
         if(this.record.playing && (!audio || this.record.id === audio.id)){
             this.pause();
         } else {
-            this.play(audio ? audio.id : this.record.id, index || this.record.index);
+            this.play(audio ? audio.id : this.record.id, index !== undefined ? index : this.record.index);
         }
     }
 
