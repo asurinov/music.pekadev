@@ -176,7 +176,8 @@ gulp.task("ng2Libs", function(){
         '@ng-bootstrap/ng-bootstrap/bundles/ng-bootstrap.js.map',
         'bootstrap-slider/dist/bootstrap-slider.min.js',
         'underscore/underscore-min.js',
-        'underscore/underscore-min.map'
+        'underscore/underscore-min.map',
+        'file-saver/FileSaver.min.js'
     ], {cwd: 'node_modules/**'})
     .pipe(gulp.dest(config.distPath + config.librariesPath));
 });

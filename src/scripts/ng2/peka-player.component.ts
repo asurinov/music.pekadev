@@ -83,10 +83,9 @@ export class PlayerComponent {
                 this.audioSearch();
                 break;
             case 'track':
-                // if(this.stateService.params['trackId']){
-                //     this.getAudioById(this.stateService.params['trackId']);
-                // }
-                // this.resetPaging();
+                if(this.stateService.params['trackId']){
+                     this.getAudioById(this.stateService.params['trackId']);
+                }
                 break;
             default:
                 break;
@@ -156,5 +155,12 @@ export class PlayerComponent {
         }
 
         this.stateService.go('search', { query: this.pattern, byArtist: this.byArtist, page: this.paging.currentPage });
+    }
+
+    getAudioById(trackId){
+        this.appService.getAudioById(trackId).then((res) => {
+            this.paging.setTotalItems(1);
+            this.tracks = res;
+        });
     }
 }

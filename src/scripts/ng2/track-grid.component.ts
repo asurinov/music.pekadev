@@ -1,6 +1,8 @@
 import {Component, EventEmitter} from '@angular/core';
+import {StateService} from 'ui-router-ng2';
 import {ITrack} from './player.models';
 import {AudioService} from './audio.service';
+import {AppService} from "./app.service";
 import * as _ from "underscore";
 
 @Component({
@@ -28,12 +30,12 @@ import * as _ from "underscore";
                         <span>{{audio.duration | pekaDuration}}</span>
                     </td>
                     <td>
-                        <a [href]="audio.url" download="" title="Скачать" (click)="$event.stopPropagation()">
+                        <span title="Скачать" (click)="$event.stopPropagation();download(audio)">
                             <i class="fa fa-download"></i>
-                        </a>
-                        <a uiSref="track" [uiParams]="{ trackId: audio.owner_id + '_' + audio.id }" title="Ссылка на трек">
+                        </span>
+                        <span title="Скопировать ссылку на трек" (click)="$event.stopPropagation();copyLink(audio)">
                             <i class="fa fa-share"></i>
-                        </a>
+                        </span>
                     </td>
                 </tr>
             </tbody>
@@ -87,7 +89,11 @@ export class TrackGridComponent {
 
     onSearchByArtist: EventEmitter<string> = new EventEmitter<string>();
 
-    constructor(private audioService: AudioService){
+    constructor(
+        private appService: AppService,
+        private audioService: AudioService,
+        private stateService: StateService,
+    ){
         this.volume = audioService.getVolume();
         this.repeatMode = audioService.getRepeatMode();
 
@@ -203,5 +209,14 @@ export class TrackGridComponent {
     toggleRepeatMode(){
         this.repeatMode = !this.repeatMode;
         this.audioService.setRepeatMode(this.repeatMode);
+    }
+
+    download(audio: ITrack){
+        this.appService.download(`${audio.artist} - ${audio.title}.mp3`, audio.url);
+    }
+
+    copyLink(audio: ITrack){
+        const link = this.stateService.href('track', {trackId: `${audio.owner_id}_${audio.id}`}, { absolute: true });
+        this.appService.copyToClipboard(link);
     }
 }
