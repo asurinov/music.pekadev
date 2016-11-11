@@ -216,7 +216,7 @@ export class TrackGridComponent {
     }
 
     copyLink(audio: ITrack){
-        const link = this.stateService.href('track', {trackId: `${audio.owner_id}_${audio.id}`}, { absolute: true });
-        this.appService.copyToClipboard(link);
+        const link = this.stateService.href('track', {trackId: `${audio.owner_id}_${audio.id}`});
+        this.appService.copyToClipboard(`${window.location.host}${link}`);
     }
 }
